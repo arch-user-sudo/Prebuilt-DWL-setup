@@ -35,10 +35,10 @@ static int log_level = WLR_ERROR;
 
 /* Autostart */
 static const char *const autostart[] = {
-        "wbg", "/home/lynch/1.png", NULL,
-        "mako", NULL,
+    "wbg", "/home/lynch/1.png", NULL,
+    "mako", NULL,
 	"/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1", NULL,                            
-        "/usr/lib/xdg-desktop-portal-gtk", NULL,  
+    "/usr/lib/xdg-desktop-portal-gtk", NULL,  
 	NULL /* terminate */
 };
 
@@ -148,13 +148,10 @@ static const enum libinput_config_tap_button_map button_map = LIBINPUT_CONFIG_TA
 /* commands */
 static const char *termcmd[] =     { "kitty", NULL };
 static const char *menucmd[] =     { "bash", "/home/lynch/rofi.sh", NULL };
-static const char *wpncmd[] =      { "wpaperctl", "next", NULL };
-static const char *wppcmd[] =      { "wpaperctl", "previous", NULL };
 static const char *usercmd[] =     { "kitty", "-e", "sudo", "sysctl", "kernel.unprivileged_userns_clone=1", NULL };
 static const char *user1cmd[] =    { "kitty", "-e", "sudo", "sysctl", "kernel.unprivileged_userns_clone=0", NULL };
 static const char *shotcmd[] =     { "bash", "/home/lynch/screenshot.sh", NULL };
 static const char *filebcmd[] =    { "nemo", NULL };
-static const char *tuiapps[] =     { "bash", "/home/lynch/rofiterminalapps.sh", NULL };
 static const char *up_vol[]   =    { "pactl", "set-sink-volume", "@DEFAULT_SINK@", "+10%",   NULL };
 static const char *down_vol[] =    { "pactl", "set-sink-volume", "@DEFAULT_SINK@", "-10%",   NULL };
 static const char *mute_vol[] =    { "pactl", "set-sink-mute",   "@DEFAULT_SINK@", "toggle", NULL };
@@ -189,8 +186,7 @@ static const Key keys[] = {
 	{ MODKEY,                    XKB_KEY_m,          setlayout,      {.v = &layouts[2]} },
 	{ MODKEY,                    XKB_KEY_space,      setlayout,      {0} },
 	{ MODKEY,                    XKB_KEY_y,        togglefullscreen, {0} },
-        { MODKEY,                    XKB_KEY_s,          spawn,          {.v = tuiapps} },
-        { MODKEY,                    XKB_KEY_g,          togglegaps,     {0} },
+    { MODKEY,                    XKB_KEY_g,          togglegaps,     {0} },
 	TAGKEYS(          XKB_KEY_1, XKB_KEY_exclam,                     0),
 	TAGKEYS(          XKB_KEY_2, XKB_KEY_at,                         1),
 	TAGKEYS(          XKB_KEY_3, XKB_KEY_numbersign,                 2),
