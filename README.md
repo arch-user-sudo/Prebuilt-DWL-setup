@@ -22,6 +22,12 @@ Dependacies:
              nemo  (file manager)
              wlroots0.19
              wayland-protocols
+             mako   ( notification manager )
+             
+             ( build and install slstatus for bar to display time cpu and ram usage )
+             
+             Grim & Slurp ( For Screenshots )
+              ## NB ## Turn Caps Lock on to press $UPER + G to take screenshot
              
              
              gtk 3            |
@@ -33,5 +39,10 @@ Dependacies:
 
              
              ttf-dejavu (For font on Bar)
+
+             Copy The Folders In CONFIG for mako, qutebrowser & rofi theme
+
+            
+             
             
              
