@@ -1,3 +1,6 @@
+Will add .config Folders Soon
+
+
 # Prebuilt-DWL-setup
 DWL setup
 
