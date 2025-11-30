@@ -12,6 +12,7 @@
     }
 
     Dependacies: 
+             python3
              pixman
              xdg-desktop-portal-gtk
              polkit-gnome
