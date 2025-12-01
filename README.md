@@ -1,10 +1,7 @@
-     Will add .config Folders Soon
+    Prebuilt-DWL-setup
+    
 
-
-    # Prebuilt-DWL-setup
-    DWL setup
-
-    ~ { Copy the files inside of the JT folder to your home folder and use $SUPER + W to launch a custom control panel for managing wifi audio and bluetooth. This picture sets the wallpaper aswell.
+    * Copy the files inside of the JT folder to your home folder and use $SUPER + W to launch a custom control panel for managing wifi audio and bluetooth. ( Wallpaper will not work if files are not copied aswell as the connection panel. )
 
     ## NB ## 
     This was designed for arch linux using pipewire Network Manager and Bluez.
@@ -19,15 +16,15 @@
              tllist
              fcft
              kitty
-             firejail
-             qutebrowser
+             firejail  
+             qutebrowser  ( launch with SUPER + B )
              rofi  (app launcher)
              wbg   (found on aur)  >>    yay -S wbg
              nemo  (file manager)
              wlroots0.19
              wayland-protocols
              mako   ( notification manager )
-             
+             fish (optional) : Change your shell for this to work (sudo chsh -s /usr/bin/fish) & copy fish config folder for nice folder icons in terminal. Will change the colours to either white or yellow soon.
              ( build and install slstatus for bar to display time cpu and ram usage )
              
              Grim & Slurp ( For Screenshots )
@@ -44,7 +41,14 @@
              
              ttf-dejavu (For font on Bar)
 
-             Copy The Folders In CONFIG for mako, qutebrowser & rofi theme
+             Copy The Folders In CONFIG to your .config folder for mako, & rofi theme.
+
+             I'll upload the fastfetch config soon.
+
+             I'm Lazy, I'll keep this repo up to date over time. 
+
+             My setup support the hardened Linux Kernel aswell. check the keybinds in config.h in dwl folder.
+             
 
             
              
