@@ -26,8 +26,8 @@
              fish (optional) : Change your shell for this to work (sudo chsh -s /usr/bin/fish) & copy fish config folder for nice folder icons in terminal. Will change the colours to either white or yellow soon.
              ( build and install slstatus for bar to display time cpu and ram usage )
              
-             Grim & Slurp ( For Screenshots )
-              ## NB ## Turn Caps Lock on to press $UPER + G to take screenshot
+             Grim & Slurp ( For Screenshots )   >> Copy files from JT folder into Home folder for this to work
+              ## NB ## Turn Caps Lock on & press $UPER + G to take screenshot
              
              python3          |
              gtk 3            |
