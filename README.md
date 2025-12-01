@@ -39,7 +39,7 @@
              python3          |
              gtk 3            |
              gtk 4            | 
-             gtk-layer-shell  |    >>   For Connection Centre
+             gtk-layer-shell  |    >>   For Wifi/Bluetooth/Audio Panel
              speedtest-cli    |
              bluez            |
              bluez-utils      |
