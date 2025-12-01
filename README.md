@@ -10,6 +10,8 @@
     ## NB ## 
     This was designed for arch linux using pipewire Network Manager and Bluez.
 
+    Launch dwl from tty using dwl -s slstatus for bar time and date to work
+
     }
 
     Dependacies: 
@@ -63,6 +65,8 @@
 
              * I'm Lazy, I'll keep this repo up to date over time. dw about the long term, i use this for myself so it'll always 
              get maintained
+
+             Launch dwl from tty using dwl -s slstatus 
              
 
             
