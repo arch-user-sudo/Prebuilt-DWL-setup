@@ -5,9 +5,10 @@ import gi
 import subprocess
 import re
 import os
+import traceback 
 
 gi.require_version('Gtk', '4.0')
-from gi.repository import Gtk, Gdk, GLib, Gio # Ensure Gdk is imported
+from gi.repository import Gtk, Gdk, GLib, Gio 
 
 # Helper class for list box rows (used for WiFi and Bluetooth dynamic lists)
 class ListItemRow(Gtk.ListBoxRow):
@@ -21,11 +22,11 @@ class ListItemRow(Gtk.ListBoxRow):
 
 class ConnectionCentreApp(Gtk.Application):
     def __init__(self):
-        # ✅ APPLICATION ID CHANGE APPLIED HERE
         super().__init__(application_id="org.connectioncentre.app", 
                          flags=0)
         # Global job tracker
         self.refresh_jobs = {}
+        
         # Initialize data storage lists/variables
         self.connected_networks_data = [] # For WiFi/Ethernet connections
         self.connected_bt_data = []       # For connected Bluetooth devices
@@ -74,7 +75,7 @@ class ConnectionCentreApp(Gtk.Application):
         # --- 2. Styling (CSS) ---
         css_provider = Gtk.CssProvider()
         css = """
-        window, box, stack, grid, listboxrow {
+        window, box, stack, grid, listboxrow, {
             background-color: #222222B3;
             color: white;
         }
@@ -154,6 +155,38 @@ class ConnectionCentreApp(Gtk.Application):
 
     # --- General Utilities ---
     
+    def _log_error_to_ui(self, message, panel_name):
+        """Logs an error message to the correct panel's log area."""
+        
+        def update():
+            # Check if the UI element exists before trying to update it
+            if panel_name == "wifi" and hasattr(self, 'status_text_view'):
+                # Also log to console for debugging
+                print(f"THREAD ERROR LOG (WIFI): {message}") 
+                self._update_status_text(f"❌ THREAD ERROR: {message.splitlines()[0]}", clear=False)
+            elif panel_name == "bluetooth" and hasattr(self, 'bt_status_listbox'):
+                print(f"THREAD ERROR LOG (BLUETOOTH): {message}")
+                self._update_bt_log(f"❌ THREAD ERROR: {message.splitlines()[0]}")
+            else:
+                 print(f"THREAD ERROR LOG (AUDIO/GLOBAL): {message}")
+                 
+        GLib.idle_add(update)
+        
+    def _safe_thread_start(self, target, args=(), kwargs={}, panel_name="wifi"):
+        """Wraps a target function with exception handling before running it in a thread."""
+        
+        def safe_wrapper():
+            try:
+                # The target function is called here
+                target(*args, **kwargs)
+            except Exception as e:
+                # Log the error and traceback to prevent application crash
+                error_msg = f"Uncaught exception in background thread '{target.__name__}': {e}\n{traceback.format_exc()}"
+                self._log_error_to_ui(error_msg, panel_name)
+
+        # CRITICAL: Use the safe wrapper to start the thread
+        threading.Thread(target=safe_wrapper, daemon=True).start()
+    
     def on_closing(self, win):
         """Safely shuts down the application by canceling all GLib jobs."""
         print("Shutting down... canceling background jobs.")
@@ -182,7 +215,7 @@ class ConnectionCentreApp(Gtk.Application):
             self.refresh_bt_status()
         elif panel_name == "audio":
             # Start initial data load in a thread
-            threading.Thread(target=self._load_audio_panel_thread, daemon=True).start()
+            self._safe_thread_start(target=self._load_audio_panel_thread, panel_name="audio")
             
     def _run_subprocess(self, command, timeout=10):
         """Helper to safely run subprocess commands."""
@@ -390,11 +423,13 @@ class ConnectionCentreApp(Gtk.Application):
         self.forget_button.set_sensitive(has_active_connections)
         
         # 3. Schedule next refresh
+        # Only schedule if the speedtest job hasn't stopped it
         if 'wifi_status' in self.refresh_jobs:
             GLib.source_remove(self.refresh_jobs['wifi_status'])
         
         # Schedule the next refresh in 5 seconds
         self.refresh_jobs['wifi_status'] = GLib.timeout_add_seconds(5, self.refresh_status)
+        return GLib.SOURCE_CONTINUE
 
 
     def scan_wifi_networks(self):
@@ -405,22 +440,20 @@ class ConnectionCentreApp(Gtk.Application):
         known_ssids = set()
         for line in stdout.split("\n"):
             if line:
+                # Use regex to find the signal percentage at the end
                 match = re.search(r':(\d+)$', line)
                 if match:
                     signal = match.group(1)
-                    # SSID contains signal in nmcli output when -t is used, so we need a cleaner split
-                    # A better way is to avoid -t and parse the table, but sticking to provided logic:
-                    parts = line.split(":")
-                    if len(parts) >= 2:
-                        ssid = parts[0].strip()
-                        signal = parts[-1].strip()
-                        
-                        ssid = ssid if ssid else "<Hidden Network>"
-                        
-                        # Only add if we haven't seen this SSID before in this scan
-                        if ssid not in known_ssids:
-                            networks.append((f"{ssid} ({signal}%)", ssid))
-                            known_ssids.add(ssid)
+                    # FIX: Robustly determine the SSID by taking the substring before the signal percentage match
+                    # This prevents SSIDs with colons from breaking the parsing
+                    ssid = line[:match.start()].strip()
+                    
+                    ssid = ssid if ssid else "<Hidden Network>"
+                    
+                    # Only add if we haven't seen this SSID before in this scan
+                    if ssid not in known_ssids:
+                        networks.append((f"{ssid} ({signal}%)", ssid))
+                        known_ssids.add(ssid)
         return networks
 
     def perform_wifi_scan(self):
@@ -428,7 +461,7 @@ class ConnectionCentreApp(Gtk.Application):
         self._clear_container(self.wifi_networks_listbox)
         self._add_listbox_item(self.wifi_networks_listbox, "Scanning for networks... Please wait.")
         
-        threading.Thread(target=self._update_wifi_scan_results_thread, daemon=True).start()
+        self._safe_thread_start(target=self._update_wifi_scan_results_thread, panel_name="wifi")
 
     def _update_wifi_scan_results_thread(self):
         """The function that runs in the thread to get scan results."""
@@ -464,7 +497,7 @@ class ConnectionCentreApp(Gtk.Application):
         self._clear_container(self.wifi_networks_listbox)
         self._add_listbox_item(self.wifi_networks_listbox, f"Connecting to {ssid}...")
         
-        threading.Thread(target=self._connect_thread, args=(ssid, password), daemon=True).start()
+        self._safe_thread_start(target=self._connect_thread, args=(ssid, password), panel_name="wifi")
 
     def _connect_thread(self, ssid, password):
         """Performs the connection in a background thread."""
@@ -481,7 +514,8 @@ class ConnectionCentreApp(Gtk.Application):
             return
 
         # 2. Try to delete old connection profile with the same name first
-        subprocess.run(["nmcli", "connection", "delete", ssid], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        # FIX: Use the internal wrapper for consistency and timeout control
+        self._run_subprocess(["nmcli", "connection", "delete", ssid], timeout=5)
         
         # 3. Create new connection profile and connect
         create_cmd = ["nmcli", "connection", "add", "type", "wifi", "ifname", wifi_iface,
@@ -531,14 +565,21 @@ class ConnectionCentreApp(Gtk.Application):
     def run_speedtest_thread(self):
         """Initiates the speedtest in a separate thread to prevent GUI freeze."""
         
+        # FIX: CRITICAL - Stop the continuous refresh job before starting the speedtest
+        if 'wifi_status' in self.refresh_jobs:
+            GLib.source_remove(self.refresh_jobs['wifi_status'])
+            del self.refresh_jobs['wifi_status']
+        
         self._update_status_text("Running speedtest... This may take a minute.", clear=True)
         self.speedtest_button.set_sensitive(False)
         self.speedtest_button.set_label("Testing...")
         
-        threading.Thread(target=self._speedtest_target, daemon=True).start()
+        # CRITICAL FIX: Use the safe wrapper here
+        self._safe_thread_start(target=self._speedtest_target, panel_name="wifi")
 
     def _speedtest_target(self):
         """The actual speedtest logic running in a background thread."""
+        # Use a longer timeout for speedtest-cli
         output, error, return_code = self._run_subprocess(
             ["speedtest-cli", "--simple"], timeout=60
         )
@@ -548,7 +589,7 @@ class ConnectionCentreApp(Gtk.Application):
     def _update_speedtest_results(self, output, error, return_code):
         """Updates the status text area with speedtest results (on main thread)."""
         
-        self._update_status_text("", clear=True) # Clear existing text
+        self._update_status_text("", clear=True) # Clear existing text (the "Running speedtest..." message)
 
         if return_code == 0:
             self._update_status_text("✅ Speedtest Results:\n\n" + output)
@@ -563,16 +604,27 @@ class ConnectionCentreApp(Gtk.Application):
         self.speedtest_button.set_sensitive(True)
         self.speedtest_button.set_label("Run Speedtest")
         
+        # FIX: CRITICAL - Schedule the return to normal status refresh after a long delay (60s)
+        def restart_status_refresh():
+            # Clear the speedtest results
+            self._update_status_text("\n\n--- Speedtest results expired. Resuming status updates. ---", clear=True)
+            # Calling refresh_status() triggers the first status update and re-schedules the recurring job.
+            self.refresh_status() 
+            return GLib.SOURCE_REMOVE # This is a one-time job
+
+        # Schedule the status refresh to remain paused for 60 seconds to allow reading
+        GLib.timeout_add_seconds(60, restart_status_refresh)
+        
         
     # --- BLUETOOTH Backend Methods (bluetoothctl) ---
 
     def _run_bluetoothctl_command(self, commands):
         """Pipes commands to the interactive bluetoothctl shell."""
         try:
-            # Popen starts the process
+            # FIX: Increased timeout from 5s to 15s for reliable pairing/connection
             p = subprocess.Popen(['bluetoothctl'], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
             # Communicate sends the commands and waits for output
-            stdout, stderr = p.communicate(input=commands, timeout=5)
+            stdout, stderr = p.communicate(input=commands, timeout=15) 
             return stdout, stderr, p.returncode
         except FileNotFoundError:
             return "", "bluetoothctl command not found. Is bluez-utils installed?", 127
@@ -637,9 +689,10 @@ class ConnectionCentreApp(Gtk.Application):
         """Runs the scanning logic in a separate thread."""
         
         # 1. Start Discovery (non-blocking in the interactive shell)
-        self._update_bt_log("Starting discovery (5 seconds)...")
+        self._update_bt_log("Starting discovery (8 seconds)...")
         self._run_bluetoothctl_command("scan on\n")
-        time.sleep(5)
+        # FIX: Increased sleep from 5s to 8s for more reliable discovery
+        time.sleep(8) 
         self._run_bluetoothctl_command("scan off\n") # Stop discovery
 
         # 2. Get list of all known/discovered devices
@@ -666,7 +719,7 @@ class ConnectionCentreApp(Gtk.Application):
         self._update_bt_log("Starting background scan... Please wait.")
         self._clear_container(self.bluetooth_listbox)
 
-        threading.Thread(target=self._scan_devices_thread, daemon=True).start()
+        self._safe_thread_start(target=self._scan_devices_thread, panel_name="bluetooth")
 
 
     def _update_bt_scan_results_gui(self, all_devices, stderr):
@@ -741,10 +794,11 @@ class ConnectionCentreApp(Gtk.Application):
         self._clear_container(self.bt_status_listbox)
         self._update_bt_log(f"Attempting **Pair** with {name}...")
         
-        threading.Thread(target=self._pair_bt_device_thread, args=(mac, name), daemon=True).start()
+        self._safe_thread_start(target=self._pair_bt_device_thread, args=(mac, name), panel_name="bluetooth")
 
     def _pair_bt_device_thread(self, mac, name):
         commands = f"pair {mac}\nexit\n"
+        # Uses the increased 15s timeout from _run_bluetoothctl_command
         stdout, stderr, returncode = self._run_bluetoothctl_command(commands)
 
         if "Pairing successful" in stdout:
@@ -755,7 +809,7 @@ class ConnectionCentreApp(Gtk.Application):
             self._update_bt_log(f"❌ Pairing failed. Error: {stderr.strip() or stdout.strip()}")
 
         # Re-scan to update paired status
-        self._scan_devices_thread()
+        self._safe_thread_start(target=self._scan_devices_thread, panel_name="bluetooth")
 
 
     def connect_bt_device(self):
@@ -766,10 +820,11 @@ class ConnectionCentreApp(Gtk.Application):
         self._clear_container(self.bt_status_listbox)
         self._update_bt_log(f"Attempting **Connect** with {name}...")
 
-        threading.Thread(target=self._connect_bt_device_thread, args=(mac, name), daemon=True).start()
+        self._safe_thread_start(target=self._connect_bt_device_thread, args=(mac, name), panel_name="bluetooth")
 
     def _connect_bt_device_thread(self, mac, name):
         commands = f"connect {mac}\nexit\n"
+        # Uses the increased 15s timeout from _run_bluetoothctl_command
         stdout, stderr, returncode = self._run_bluetoothctl_command(commands)
 
         if returncode == 0 and ("Connection successful" in stdout or "successful" in stdout):
@@ -778,7 +833,7 @@ class ConnectionCentreApp(Gtk.Application):
             self._update_bt_log(f"⚠️ Connection failed. Error: {stderr.strip() or stdout.strip()}")
 
         # Re-scan to update connection status
-        self._scan_devices_thread()
+        self._safe_thread_start(target=self._scan_devices_thread, panel_name="bluetooth")
 
     def trust_bt_device(self):
         selected_device, mac = self._get_selected_device_data(self.bluetooth_listbox)
@@ -786,7 +841,7 @@ class ConnectionCentreApp(Gtk.Application):
         name = selected_device['name']
         
         self._update_bt_log(f"Attempting to trust {name}...")
-        threading.Thread(target=self._trust_bt_device_thread, args=(mac, name), daemon=True).start()
+        self._safe_thread_start(target=self._trust_bt_device_thread, args=(mac, name), panel_name="bluetooth")
 
     def _trust_bt_device_thread(self, mac, name):
         stdout, stderr, _ = self._run_bluetoothctl_command(f"trust {mac}\nexit\n")
@@ -797,7 +852,7 @@ class ConnectionCentreApp(Gtk.Application):
             self._update_bt_log(f"⭐ Successfully trusted {name}. It should now auto-connect.")
             
         time.sleep(1)
-        self._scan_devices_thread()
+        self._safe_thread_start(target=self._scan_devices_thread, panel_name="bluetooth")
 
 
     def forget_bt_device(self):
@@ -806,7 +861,7 @@ class ConnectionCentreApp(Gtk.Application):
         name = selected_device['name']
 
         self._update_bt_log(f"Attempting to **Forget (Remove)** {name} ({mac})...")
-        threading.Thread(target=self._forget_bt_device_thread, args=(mac, name), daemon=True).start()
+        self._safe_thread_start(target=self._forget_bt_device_thread, args=(mac, name), panel_name="bluetooth")
 
     def _forget_bt_device_thread(self, mac, name):
         commands = f"remove {mac}\nexit\n"
@@ -820,7 +875,7 @@ class ConnectionCentreApp(Gtk.Application):
             self._update_bt_log(f"❌ Failed to forget. Error: {stderr.strip() or stdout.strip()}")
 
         # Refresh the list
-        self._scan_devices_thread()
+        self._safe_thread_start(target=self._scan_devices_thread, panel_name="bluetooth")
 
 
     def disconnect_bt_device(self):
@@ -831,7 +886,7 @@ class ConnectionCentreApp(Gtk.Application):
         self._clear_container(self.bt_status_listbox)
         self._update_bt_log(f"Attempting to disconnect {name}...")
 
-        threading.Thread(target=self._disconnect_bt_device_thread, args=(mac, name), daemon=True).start()
+        self._safe_thread_start(target=self._disconnect_bt_device_thread, args=(mac, name), panel_name="bluetooth")
 
     def _disconnect_bt_device_thread(self, mac, name):
         commands = f"disconnect {mac}\nexit\n"
@@ -843,7 +898,7 @@ class ConnectionCentreApp(Gtk.Application):
             self._update_bt_log(f"Disconnect failed. Error: {stderr.strip() or stdout.strip()}")
 
         # Re-scan to update connection status
-        self._scan_devices_thread()
+        self._safe_thread_start(target=self._scan_devices_thread, panel_name="bluetooth")
 
 
     def refresh_bt_status(self):
@@ -863,10 +918,10 @@ class ConnectionCentreApp(Gtk.Application):
         # 2. Update the connected devices list and scan if powered
         if is_powered:
             # Perform a quick update on connected devices
-            threading.Thread(target=self._update_connected_bt_list_thread, daemon=True).start()
+            self._safe_thread_start(target=self._update_connected_bt_list_thread, panel_name="bluetooth")
             # Initial scan if the list is empty (avoids re-scanning every 5s)
             if not self.bluetooth_listbox_devices:
-                threading.Thread(target=self._scan_devices_thread, daemon=True).start()
+                self._safe_thread_start(target=self._scan_devices_thread, panel_name="bluetooth")
 
         # 3. Schedule the next refresh
         if 'bluetooth_status' in self.refresh_jobs:
@@ -884,17 +939,74 @@ class ConnectionCentreApp(Gtk.Application):
         """Safely run pactl command."""
         if not self.has_pactl():
             return "", "pactl command not found. Is PulseAudio/PipeWire installed?", 127
+        # Note: We do NOT use safe_thread_start here as this is a sync helper used *inside* other threads.
         return self._run_subprocess(["pactl"] + args, timeout=3)
 
+    # REVERTED: Now returns a list of dictionaries with volume and mute status
     def get_output_devices(self):
-        stdout, _, returncode = self._run_pactl(["list","short","sinks"])
+        """Gets a list of output device data (sinks)."""
+        stdout, _, returncode = self._run_pactl(["list", "sinks"])
         if returncode != 0: return []
-        return [line.split("\t")[1] for line in stdout.split("\n") if line]
+        
+        devices = []
+        current_device = {}
+        
+        for line in stdout.splitlines():
+            line = line.strip()
+            if line.startswith("Sink #"):
+                if 'name' in current_device:
+                    devices.append(current_device)
+                current_device = {}
+                
+            elif line.startswith("Name:"):
+                current_device['name'] = line.split(":", 1)[1].strip()
+            
+            elif line.startswith("Volume:"):
+                # Try to find the percentage volume, default to 0
+                match = re.search(r'/\s*(\d+)%', line)
+                current_device['volume'] = int(match.group(1)) if match else 0
 
+            elif line.startswith("Mute:"):
+                current_device['muted'] = line.split(":", 1)[1].strip().lower() == "yes"
+
+        # Handle the last device
+        if 'name' in current_device:
+            devices.append(current_device)
+            
+        return devices # list of dicts: [{'name': '...', 'volume': 0, 'muted': False}, ...]
+
+    # REVERTED: Now returns a list of dictionaries with volume and mute status
     def get_input_devices(self):
-        stdout, _, returncode = self._run_pactl(["list","short","sources"])
+        """Gets a list of input device data (sources)."""
+        stdout, _, returncode = self._run_pactl(["list", "sources"])
         if returncode != 0: return []
-        return [line.split("\t")[1] for line in stdout.split("\n") if line]
+        
+        devices = []
+        current_device = {}
+        
+        for line in stdout.splitlines():
+            line = line.strip()
+            if line.startswith("Source #"):
+                if 'name' in current_device:
+                    devices.append(current_device)
+                current_device = {}
+                
+            elif line.startswith("Name:"):
+                current_device['name'] = line.split(":", 1)[1].strip()
+            
+            elif line.startswith("Volume:"):
+                # Try to find the percentage volume, default to 0
+                match = re.search(r'/\s*(\d+)%', line)
+                current_device['volume'] = int(match.group(1)) if match else 0
+
+            elif line.startswith("Mute:"):
+                current_device['muted'] = line.split(":", 1)[1].strip().lower() == "yes"
+
+        # Handle the last device
+        if 'name' in current_device:
+            devices.append(current_device)
+            
+        return devices # list of dicts
 
     def get_default_output(self):
         stdout, _, returncode = self._run_pactl(["get-default-sink"])
@@ -908,22 +1020,24 @@ class ConnectionCentreApp(Gtk.Application):
         command = ["set-default-sink", device_name] if is_output else ["set-default-source", device_name]
         self._run_pactl(command)
         # Manually refresh the status after setting default
-        threading.Thread(target=self._manual_refresh_thread, daemon=True).start()
+        self._safe_thread_start(target=self._manual_refresh_thread, panel_name="audio")
 
+    # REVERTED: Removed debounce logic, now calls pactl in a thread directly
     def set_volume(self, scale, device_name, is_output):
-        # GTK Scale passes value as float
+        """Sets the device volume in a background thread to prevent GUI freeze."""
         value = int(scale.get_value()) 
         command = ["set-sink-volume", device_name, f"{value}%"] if is_output else ["set-source-volume", device_name, f"{value}%"]
-        # Run this in a thread as it's a blocking external call
-        threading.Thread(target=lambda: self._run_pactl(command), daemon=True).start()
+        # Run in a thread to prevent UI freeze
+        self._safe_thread_start(target=lambda: self._run_pactl(command), panel_name="audio")
+
 
     def toggle_mute(self, button, device_name, is_output, mute=True):
         command = ["set-sink-mute", device_name, "1" if mute else "0"] if is_output else ["set-source-mute", device_name, "1" if mute else "0"]
-        threading.Thread(target=lambda: self._run_pactl(command), daemon=True).start()
+        self._safe_thread_start(target=lambda: self._run_pactl(command), panel_name="audio")
     
-    def _create_device_row(self, frame_box, device_name, is_output=True):
+    # REVERTED: Accepts initial_volume and is_muted parameters, sets initial value
+    def _create_device_row(self, frame_box, device_name, is_output=True, initial_volume=0, is_muted=False):
         container = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=5)
-        # NOTE: Individual rows don't need status-box class as the parent container now has it
         container.set_margin_top(2)
         container.set_margin_bottom(2)
         container.set_margin_start(5)
@@ -937,8 +1051,11 @@ class ConnectionCentreApp(Gtk.Application):
 
         # Slider (Column 1)
         slider = Gtk.Scale.new_with_range(Gtk.Orientation.HORIZONTAL, 0, 150, 1)
-        slider.set_hexpand(True) # Ensures slider takes available space
-        # Note: Slider needs initial value, set later by refresh
+        slider.set_hexpand(True) 
+        
+        # Set initial value from pactl data
+        slider.set_value(initial_volume)
+        
         slider.connect("value-changed", lambda s: self.set_volume(s, device_name, is_output))
         container.append(slider)
 
@@ -958,35 +1075,57 @@ class ConnectionCentreApp(Gtk.Application):
 
         frame_box.append(container)
         
-        self.device_widgets.append((slider, label, device_name, is_output, container))
+        # Store initial mute status for easy refresh check. Added is_muted to the tuple.
+        self.device_widgets.append((slider, label, device_name, is_output, container, is_muted))
         return container
 
+    # REVERTED: Now returns (name, index, volume)
     def get_app_list(self):
+        """Parses detailed output of pactl list sink-inputs for (name, index, volume)."""
         stdout, _, returncode = self._run_pactl(["list", "sink-inputs"])
         if returncode != 0: return []
         
         apps = []
-        index = None
-        app_name = None
+        current_app = {}
+        
         for line in stdout.splitlines():
             line = line.strip()
             if line.startswith("Sink Input #"):
-                if index and app_name: # Handle case where app.name is missing
-                    apps.append( (app_name, index) )
-                index = line.split("#")[1].strip()
-                app_name = f"App #{index}" # Default name
-            elif line.startswith("application.name = ") and index:
-                app_name = line.split("=",1)[1].strip().strip('"')
-                apps.append( (app_name, index) )
-                index = None 
-                app_name = None
-        # Handle the last app in the list if it didn't hit a new Sink Input #
-        if index and app_name:
-             apps.append( (app_name, index) )
+                # Finalize the previous app
+                if 'index' in current_app:
+                    name = current_app.get('name') or f"App #{current_app['index']}"
+                    volume = current_app.get('volume', 0)
+                    apps.append( (name, current_app['index'], volume) )
+                
+                # Start the new app
+                current_app = {
+                    'index': line.split("#")[1].strip(),
+                    'name': None,
+                    'volume': 0
+                }
+            elif line.startswith("application.name = ") and current_app.get('name') is None:
+                name = line.split("=",1)[1].strip().strip('"')
+                current_app['name'] = name
+                
+            elif line.startswith("application.process.binary = ") and current_app.get('name') is None:
+                name = line.split("=",1)[1].strip().strip('"')
+                current_app['name'] = name.split("/")[-1]
+            
+            elif line.startswith("Volume:"):
+                match = re.search(r'/\s*(\d+)%', line)
+                current_app['volume'] = int(match.group(1)) if match else 0
+                
+        # Handle the last app in the list
+        if 'index' in current_app:
+             name = current_app.get('name') or f"App #{current_app['index']}" 
+             volume = current_app.get('volume', 0)
+             apps.append( (name, current_app['index'], volume) )
 
-        return apps
+        return apps # Returns list of (name, index, volume)
 
-    def _create_app_row(self, frame_box, app_name, app_index):
+
+    # REVERTED: Accepts initial_volume parameter, sets initial value
+    def _create_app_row(self, frame_box, app_name, app_index, initial_volume=0):
         container = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=5)
         container.set_css_classes(['status-box'])
         container.set_margin_top(2)
@@ -1001,8 +1140,12 @@ class ConnectionCentreApp(Gtk.Application):
         
         # Slider (Column 1)
         slider = Gtk.Scale.new_with_range(Gtk.Orientation.HORIZONTAL, 0, 150, 1)
-        slider.set_hexpand(True) # Ensures slider takes available space
-        # Slider connects to a method that runs pactl in a thread
+        slider.set_hexpand(True) 
+        
+        # Set initial value from pactl data
+        slider.set_value(initial_volume)
+        
+        # Slider connects to the simple threaded method
         slider.connect("value-changed", lambda s: self._set_app_volume_in_thread(s, app_index))
         container.append(slider)
         
@@ -1020,37 +1163,64 @@ class ConnectionCentreApp(Gtk.Application):
         self.app_widgets.append((slider, app_name, app_index, container))
         return container
     
+    # REVERTED: Removed debounce logic, now calls pactl in a thread directly
     def _set_app_volume_in_thread(self, scale, app_index):
+        """Sets the app volume in a background thread to prevent GUI freeze."""
         value = int(scale.get_value())
         command = ["set-sink-input-volume", app_index, f"{value}%"]
-        threading.Thread(target=lambda: self._run_pactl(command), daemon=True).start()
+        # Run in a thread to prevent UI freeze
+        self._safe_thread_start(target=lambda: self._run_pactl(command), panel_name="audio")
+
 
     def _toggle_app_mute(self, app_index, mute=True):
         action = "1" if mute else "0"
         command = ["set-sink-input-mute", app_index, action]
-        threading.Thread(target=lambda: self._run_pactl(command), daemon=True).start()
+        self._safe_thread_start(target=lambda: self._run_pactl(command), panel_name="audio")
 
     def refresh_all_sliders(self):
         current_default_out = self.get_default_output()
         current_default_in = self.get_default_input()
         
-        for slider, label, name, is_output, container in self.device_widgets:
+        # Sinks/Sources
+        # The tuple is now (slider, label, name, is_output, container, is_muted)
+        for i, (slider, label, name, is_output, container, is_muted) in enumerate(self.device_widgets):
             try:
-                if is_output:
-                    vol_info, _, _ = self._run_pactl(["get-sink-volume", name])
-                    is_default = name == current_default_out
-                else:
-                    vol_info, _, _ = self._run_pactl(["get-source-volume", name])
-                    is_default = name == current_default_in
+                command_prefix = "sink" if is_output else "source"
+                # Use pactl get-volume and get-mute separately for simplicity
+                vol_info, _, _ = self._run_pactl([f"get-{command_prefix}-volume", name])
+                mute_info, _, _ = self._run_pactl([f"get-{command_prefix}-mute", name])
+                current_muted = mute_info.strip().lower() == "yes"
                 
+                is_default = (name == current_default_out) if is_output else (name == current_default_in)
+                
+                # Update slider value
                 match = re.search(r'/\s*(\d+)%', vol_info)
                 if match:
                     percent = int(match.group(1))
-                    # Only update the slider if the difference is significant
-                    if abs(slider.get_value() - percent) > 5:
+                    
+                    # Only update the slider if the difference is significant or mute status changed
+                    if abs(slider.get_value() - percent) > 5 or current_muted != is_muted:
+                        # CRITICAL: Block signal handler to prevent recursive calls
+                        handler_id = slider.handler_find(self.set_volume)
+                        if handler_id:
+                            slider.handler_block(handler_id)
+                        
                         slider.set_value(percent)
-                
-                label.set_css_classes(['bold', 'lime-text'] if is_default else ['bold', 'white-text'])
+
+                        if handler_id:
+                            slider.handler_unblock(handler_id)
+
+                # Update label color for default and muted status
+                if current_muted:
+                    label.set_css_classes(['bold', 'red-text'])
+                elif is_default:
+                    label.set_css_classes(['bold', 'lime-text'])
+                else:
+                    label.set_css_classes(['bold', 'white-text'])
+                    
+                # Store the updated mute status in the list of widgets
+                self.device_widgets[i] = (slider, label, name, is_output, container, current_muted)
+
 
             except Exception:
                 # Device probably disconnected, will be cleaned up on next full refresh
@@ -1059,12 +1229,21 @@ class ConnectionCentreApp(Gtk.Application):
         # Check app volumes
         for slider, name, idx, container in self.app_widgets:
             try:
+                # Use the volume setting command to get current status
                 vol_info, _, _ = self._run_pactl(["get-sink-input-volume", idx])
                 match = re.search(r'/\s*(\d+)%', vol_info)
                 if match:
                     percent = int(match.group(1))
                     if abs(slider.get_value() - percent) > 5:
+                        # CRITICAL: Apply signal blocking fix here as well
+                        handler_id = slider.handler_find(self._set_app_volume_in_thread)
+                        if handler_id:
+                            slider.handler_block(handler_id)
+
                         slider.set_value(percent)
+                        
+                        if handler_id:
+                            slider.handler_unblock(handler_id)
             except Exception:
                 # App probably closed, will be cleaned up on next full refresh
                 pass
@@ -1082,18 +1261,58 @@ class ConnectionCentreApp(Gtk.Application):
         
     def _check_for_new_apps(self):
         """Checks for new/closed apps and updates the list if necessary."""
-        threading.Thread(target=self._check_for_new_apps_thread, daemon=True).start()
+        self._safe_thread_start(target=self._check_for_new_apps_thread, panel_name="audio")
         return GLib.SOURCE_CONTINUE
+        
+    def _update_app_list_delta(self, new_apps):
+        """
+        Updates the app volume list by adding/removing rows to prevent GUI flicker.
+        new_apps is a list of (name, index, volume).
+        """
+        # Map of GUI widgets by index
+        gui_widgets = {idx: (slider, name, idx, container) for slider, name, idx, container in self.app_widgets}
+        gui_indices = set(gui_widgets.keys())
+        
+        # Map of new apps by index (new_app_map = {index: (name, index, volume)})
+        new_app_map = {index: (name, index, volume) for name, index, volume in new_apps}
+        new_indices = set(new_app_map.keys())
+
+        # 1. Remove closed apps
+        indices_to_remove = gui_indices - new_indices
+        for idx in indices_to_remove:
+            # The full tuple is needed to remove it from self.app_widgets
+            widget_tuple = gui_widgets[idx]
+            self.app_widgets.remove(widget_tuple) # Remove from app_widgets list
+            widget_tuple[3].get_parent().remove(widget_tuple[3]) # Remove container from GUI
+
+        # 2. Add new apps
+        indices_to_add = new_indices - gui_indices
+        for idx in indices_to_add:
+            app_tuple = new_app_map[idx]
+            name, _, volume = app_tuple 
+            # _create_app_row now takes name, index, and initial_volume
+            self._create_app_row(self.app_device_box, name, idx, volume) 
+
+        # 3. Handle the 'No applications playing audio' label
+        # Get rid of the dummy label if there are real apps now
+        if new_apps and self.app_device_box.get_first_child() and \
+           isinstance(self.app_device_box.get_first_child(), Gtk.Label) and \
+           self.app_device_box.get_first_child().get_label() == "No applications playing audio":
+            self._clear_container(self.app_device_box)
+
+        # Add the dummy label if no apps are found and the box is empty
+        if not new_apps and not self.app_device_box.get_first_child():
+            self.app_device_box.append(Gtk.Label(label="No applications playing audio", css_classes=['white-text']))
 
     def _check_for_new_apps_thread(self):
         apps = self.get_app_list()
         
-        current_indices = {idx for _, idx in apps}
-        gui_indices = {idx for _, _, idx, _ in self.app_widgets}
+        # Check based on index only
+        current_indices = {idx for _, _, idx, _ in self.app_widgets}
+        new_indices = {idx for _, idx, _ in apps} # Get indices from the new list
         
-        if current_indices != gui_indices:
-            # Need a full refresh to rebuild the dynamic list
-            GLib.idle_add(lambda: self._initial_audio_gui_setup(self.get_output_devices(), self.get_input_devices(), apps)) 
+        if current_indices != new_indices:
+            GLib.idle_add(lambda: self._update_app_list_delta(apps))
 
 
     def _load_audio_panel_thread(self):
@@ -1105,9 +1324,9 @@ class ConnectionCentreApp(Gtk.Application):
             return
 
         # Data collection (slow part)
-        outputs = self.get_output_devices()
-        inputs = self.get_input_devices()
-        apps = self.get_app_list()
+        outputs = self.get_output_devices() # list of dicts
+        inputs = self.get_input_devices()   # list of dicts
+        apps = self.get_app_list()          # list of (name, index, volume)
         
         # Schedule GUI updates and start refresh loops on the main thread
         GLib.idle_add(lambda: self._initial_audio_gui_setup(outputs, inputs, apps))
@@ -1115,32 +1334,39 @@ class ConnectionCentreApp(Gtk.Application):
     def _initial_audio_gui_setup(self, outputs, inputs, apps):
         """Updates the GUI and starts the refresh loops on the main thread."""
         
-        # 1. Clear and populate output/input devices
+        # 1. Clear and populate output/input devices (Full rebuild is appropriate here)
         self._clear_container(self.output_device_box)
         self._clear_container(self.input_device_box)
         self.device_widgets.clear()
         
         if outputs:
             for dev in outputs:
-                self._create_device_row(self.output_device_box, dev, is_output=True)
+                # Calls the reverted _create_device_row (with volume/mute args)
+                self._create_device_row(
+                    self.output_device_box, 
+                    dev['name'], 
+                    is_output=True, 
+                    initial_volume=dev.get('volume', 0), 
+                    is_muted=dev.get('muted', False)
+                )
         else:
             self.output_device_box.append(Gtk.Label(label="No output devices found.", css_classes=['white-text']))
             
         if inputs:
             for dev in inputs:
-                self._create_device_row(self.input_device_box, dev, is_output=False)
+                # Calls the reverted _create_device_row (with volume/mute args)
+                self._create_device_row(
+                    self.input_device_box, 
+                    dev['name'], 
+                    is_output=False, 
+                    initial_volume=dev.get('volume', 0),
+                    is_muted=dev.get('muted', False)
+                )
         else:
             self.input_device_box.append(Gtk.Label(label="No input devices found.", css_classes=['white-text']))
 
-        # 2. Clear and populate app sliders
-        self._clear_container(self.app_device_box)
-        self.app_widgets.clear()
-
-        if not apps:
-            self.app_device_box.append(Gtk.Label(label="No applications playing audio", css_classes=['white-text']))
-        else:
-            for name, idx in apps:
-                self._create_app_row(self.app_device_box, name, idx)
+        # 2. Clear and populate app sliders (Uses delta update now)
+        self._update_app_list_delta(apps)
         
         # 3. Start the continuous refresh loops
         self.refresh_all_sliders()
@@ -1238,7 +1464,7 @@ class ConnectionCentreApp(Gtk.Application):
 
         self.wifi_page.append(connected_box)
 
-        # 5. Status Box
+        # 5. Status Box (SPEEDTEST LOG)
         label_status = Gtk.Label(label="General Device Status / Speedtest Log:", xalign=0)
         label_status.set_margin_top(10)
         label_status.set_margin_start(20)
@@ -1247,7 +1473,8 @@ class ConnectionCentreApp(Gtk.Application):
         status_scroll_win = Gtk.ScrolledWindow()
         # FIX: Explicitly set to not expand vertically
         status_scroll_win.set_vexpand(False) 
-        status_scroll_win.set_size_request(-1, 80)
+        # ✅ TALLER LOG BOX: 120 pixels confirmed
+        status_scroll_win.set_size_request(-1, 120) 
         status_scroll_win.set_margin_top(5)
         status_scroll_win.set_margin_bottom(10)
         status_scroll_win.set_margin_start(20)
@@ -1286,7 +1513,8 @@ class ConnectionCentreApp(Gtk.Application):
 
         self.speedtest_button = Gtk.Button(label="Run Speedtest")
         self.speedtest_button.set_hexpand(True)
-        self.speedtest_button.connect("clicked", lambda x: self.run_speedtest_thread())
+        # This calls the method that uses the safe wrapper
+        self.speedtest_button.connect("clicked", lambda x: self.run_speedtest_thread()) 
         button_box_bottom.append(self.speedtest_button)
 
         self.wifi_page.append(button_box_bottom)
@@ -1469,7 +1697,7 @@ class ConnectionCentreApp(Gtk.Application):
         # NOTE: The command is adapted to start a thread inside the class instance
         btn_refresh_audio.connect(
             "clicked", 
-            lambda x: threading.Thread(target=self._manual_refresh_thread, daemon=True).start()
+            lambda x: self._safe_thread_start(target=self._manual_refresh_thread, panel_name="audio")
         )
         self.audio_page.append(btn_refresh_audio)
         
