@@ -46,7 +46,7 @@
 
              I'm Lazy, I'll keep this repo up to date over time. 
 
-             My setup support the hardened Linux Kernel aswell. check the keybinds in config.h in dwl folder. 
+             My setup supports the hardened Linux Kernel aswell. check the keybinds in config.h in dwl folder. 
 
              To close a window, Turn on Caps Lock, Then Press SUPER + SHIFT + Q, I made it this way so its nearly impossible to close something accidentaly. 
              
