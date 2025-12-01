@@ -48,7 +48,9 @@
 
              My setup supports the hardened Linux Kernel aswell. check the keybinds in config.h in dwl folder. 
 
-             To close a window, Turn on Caps Lock, Then Press SUPER + SHIFT + Q, I made it this way so its nearly impossible to close something accidentaly. 
+             To close a window, Turn on Caps Lock, Then Press SUPER + SHIFT + Q with your mouse hovered over the selected window that you wanna close, I made it this way so its nearly impossible to close something accidentaly. 
+
+             There are some missing keybind errors that pop up when compiling, dont worry about that. If you wanna add one of the features, you can find it in config.def.h.
              
 
             
