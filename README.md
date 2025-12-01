@@ -29,10 +29,10 @@
              Grim & Slurp ( For Screenshots )
               ## NB ## Turn Caps Lock on to press $UPER + G to take screenshot
              
-             python3
+             python3          |
              gtk 3            |
-             gtk 4            | >   For Connection Centre
-             gtk-layer-shell  |
+             gtk 4            | 
+             gtk-layer-shell  |    >>   For Connection Centre
              speedtest-cli    |
              bluez            |
              bluez-utils      |
@@ -47,6 +47,8 @@
              I'm Lazy, I'll keep this repo up to date over time. 
 
              My setup support the hardened Linux Kernel aswell. check the keybinds in config.h in dwl folder. 
+
+             To close a window, Turn on Caps Lock, Then Press SUPER + SHIFT + Q, I made it this way so its nearly impossible to close something accidentaly. 
              
 
             
