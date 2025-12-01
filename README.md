@@ -4,7 +4,8 @@
     * Copy the files inside of the JT folder to your home folder
     and use $SUPER + W to launch a custom control panel for managing wifi 
     audio and bluetooth. ( Wallpaper will not work if files are not 
-    copied aswell as the connection panel. )
+    copied aswell as the connection panel ) & you obviously need to be using my
+    Pre-built DWL.
 
     ## NB ## 
     This was designed for arch linux using pipewire Network Manager and Bluez.
