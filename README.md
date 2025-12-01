@@ -9,18 +9,17 @@
     }
 
     Dependacies: 
-             python3
+
              pixman
              xdg-desktop-portal-gtk
              polkit-gnome
              tllist
              fcft
              kitty
-             firejail  
-             qutebrowser  ( launch with SUPER + B )
+             firejail + qutebrowser  ( launch with SUPER + B for Auto Firejaling)
              rofi  (app launcher)
              wbg   (found on aur)  >>    yay -S wbg
-             nemo  (file manager)
+             nemo  (file manager)  >> Launch with SUPER + P
              wlroots0.19
              wayland-protocols
              mako   ( notification manager )
@@ -30,7 +29,7 @@
              Grim & Slurp ( For Screenshots )
               ## NB ## Turn Caps Lock on to press $UPER + G to take screenshot
              
-             
+             python3
              gtk 3            |
              gtk 4            | >   For Connection Centre
              gtk-layer-shell  |
@@ -47,7 +46,7 @@
 
              I'm Lazy, I'll keep this repo up to date over time. 
 
-             My setup support the hardened Linux Kernel aswell. check the keybinds in config.h in dwl folder.
+             My setup support the hardened Linux Kernel aswell. check the keybinds in config.h in dwl folder. 
              
 
             
