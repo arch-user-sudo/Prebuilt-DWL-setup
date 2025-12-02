@@ -1,3 +1,10 @@
+# Compile flags for speed + reliability
+CFLAGS = -O2 -march=native -mtune=native -pipe -fno-plt -fomit-frame-pointer -flto
+LDFLAGS = -Wl,-O1,--as-needed -flto
+
+# Optional extra speed
+CFLAGS += -funroll-loops
+
 _VERSION = 0.8-dev
 VERSION  = `git describe --tags --dirty 2>/dev/null || echo $(_VERSION)`
 
