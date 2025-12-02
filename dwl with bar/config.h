@@ -10,6 +10,7 @@ static const unsigned int borderpx         = 1;  /* border pixel of windows */
 static const int showbar                   = 1; /* 0 means no bar */
 static const int topbar                    = 1; /* 0 means bottom bar */
 static const int smartgaps                 = 0;  /* 1 means no outer gap when there is only one window */
+static const int smartborders              = 1;  /* 0 means no borders when there is one window in the workspace or tag*/
 static const unsigned int gappih           = 6; /* horiz inner gap between windows */
 static const unsigned int gappiv           = 6; /* vert inner gap between windows */
 static const unsigned int gappoh           = 20; /* horiz outer gap between windows and screen edge */
@@ -35,10 +36,10 @@ static int log_level = WLR_ERROR;
 
 /* Autostart */
 static const char *const autostart[] = {
-    "wbg", "/home/lynch/1.png", NULL,
-    "mako", NULL,
+        "wbg", "/home/lynch/1.png", NULL,
+        "mako", NULL,
 	"/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1", NULL,                            
-    "/usr/lib/xdg-desktop-portal-gtk", NULL,  
+        "/usr/lib/xdg-desktop-portal-gtk", NULL,  
 	NULL /* terminate */
 };
 
@@ -72,7 +73,7 @@ static const MonitorRule monrules[] = {
 	/*{ "eDP-1",    0.5f,  1,      2,    &layouts[0], WL_OUTPUT_TRANSFORM_NORMAL,   -1,  -1 },*/
 
 	/* defaults */
-	{ "DP-1",       0.5f, 1,      1,    &layouts[0], WL_OUTPUT_TRANSFORM_NORMAL,   -1,  -1 },
+	{ "DP-1",       0.5f, 1,      1,    &layouts[0], WL_OUTPUT_TRANSFORM_NORMAL,   0,  0 },
 
 };
 
@@ -146,12 +147,13 @@ static const enum libinput_config_tap_button_map button_map = LIBINPUT_CONFIG_TA
 #define SHCMD(cmd) { .v = (const char*[]){ "/bin/sh", "-c", cmd, NULL } }
 
 /* commands */
-static const char *termcmd[] =     { "kitty", NULL };
+static const char *termcmd[] =     { "alacritty", NULL };
 static const char *menucmd[] =     { "bash", "/home/lynch/rofi.sh", NULL };
-static const char *usercmd[] =     { "kitty", "-e", "sudo", "sysctl", "kernel.unprivileged_userns_clone=1", NULL };
-static const char *user1cmd[] =    { "kitty", "-e", "sudo", "sysctl", "kernel.unprivileged_userns_clone=0", NULL };
+static const char *usercmd[] =     { "alacritty", "-e", "sudo", "sysctl", "kernel.unprivileged_userns_clone=1", NULL };
+static const char *user1cmd[] =    { "alacritty", "-e", "sudo", "sysctl", "kernel.unprivileged_userns_clone=0", NULL };
 static const char *shotcmd[] =     { "bash", "/home/lynch/screenshot.sh", NULL };
 static const char *filebcmd[] =    { "nemo", NULL };
+static const char *tuiapps[] =     { "bash", "/home/lynch/rofiterminalapps.sh", NULL };
 static const char *up_vol[]   =    { "pactl", "set-sink-volume", "@DEFAULT_SINK@", "+10%",   NULL };
 static const char *down_vol[] =    { "pactl", "set-sink-volume", "@DEFAULT_SINK@", "-10%",   NULL };
 static const char *mute_vol[] =    { "pactl", "set-sink-mute",   "@DEFAULT_SINK@", "toggle", NULL };
@@ -166,9 +168,7 @@ static const Key keys[] = {
         { MODKEY,                    XKB_KEY_G,          spawn,          {.v = shotcmd} },
         { 0,     XKB_KEY_XF86AudioMute,                  spawn,          {.v = mute_vol } },
         { 0,     XKB_KEY_XF86AudioLowerVolume,           spawn,          {.v = down_vol } },
-        { 0,     XKB_KEY_XF86AudioRaiseVolume,           spawn,          {.v = up_vol } },
-        /*{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_m,          spawn,          {.v = wpncmd} },*/
-        /*{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_n,          spawn,          {.v = wppcmd} },*/
+        { 0,     XKB_KEY_XF86AudioRaiseVolume,           spawn,          {.v = up_vol } }, 
         { MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_L,          spawn,          {.v = usercmd} },
         { MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_K,          spawn,          {.v = user1cmd} },
 	{ MODKEY,                    XKB_KEY_b,          spawn,          {.v = browser} },
@@ -186,7 +186,8 @@ static const Key keys[] = {
 	{ MODKEY,                    XKB_KEY_m,          setlayout,      {.v = &layouts[2]} },
 	{ MODKEY,                    XKB_KEY_space,      setlayout,      {0} },
 	{ MODKEY,                    XKB_KEY_y,        togglefullscreen, {0} },
-    { MODKEY,                    XKB_KEY_g,          togglegaps,     {0} },
+        { MODKEY,                    XKB_KEY_s,          spawn,          {.v = tuiapps} },
+        { MODKEY,                    XKB_KEY_g,          togglegaps,     {0} },
 	TAGKEYS(          XKB_KEY_1, XKB_KEY_exclam,                     0),
 	TAGKEYS(          XKB_KEY_2, XKB_KEY_at,                         1),
 	TAGKEYS(          XKB_KEY_3, XKB_KEY_numbersign,                 2),
