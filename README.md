@@ -21,8 +21,7 @@ You must use my pre-built DWL for this setup to work as intended.
 
 Launch DWL from a TTY using:
 
-dwl -s slstatus
-
+slstatus -s | dwl
 
 This enables the bar with time, CPU, and RAM info.
 
