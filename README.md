@@ -38,7 +38,7 @@ BlueZ
 
 Dependencies:
 
-*Use sh scripts OR install them manually*
+*Use sh scripts OR install them manually* & *Use Both*
 
 pixman,
 xdg-desktop-portal-gtk,
