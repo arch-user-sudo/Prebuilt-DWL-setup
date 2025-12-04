@@ -3,7 +3,7 @@ Prebuilt DWL Setup
 This repository contains my pre-configured DWL environment for Arch Linux.
 It includes a custom control panel, themed components, and integrations for Wi-Fi, audio, Bluetooth, screenshots, notifications, and more.
 
-Getting Started
+Getting Started:
 
 Copy everything inside the JT folder into your home directory.
 This is required for:
