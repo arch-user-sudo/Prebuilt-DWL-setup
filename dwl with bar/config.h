@@ -17,7 +17,7 @@ static const unsigned int gappoh           = 20; /* horiz outer gap between wind
 static const unsigned int gappov           = 10; /* vert outer gap between windows and screen edge */
 static const int monoclegaps               = 1;  /* 1 means outer gaps in monocle layout */
 static const int cursor_timeout            = 5;
-static const char *fonts[]                 = {"DejaVu Sans Mono Book:size=10"};
+static const char *fonts[]                 = {"DejaVu Sans:size=10"};
 static const float rootcolor[]             = COLOR(0x000000ff);
 /* This conforms to the xdg-protocol. Set the alpha to zero to restore the old behavior */
 static const float fullscreen_bg[]         = {0.0f, 0.0f, 0.0f, 1.0f}; /* You can also use glsl colors */
@@ -69,7 +69,7 @@ static const Layout layouts[] = {
 /* NOTE: ALWAYS add a fallback rule, even if you are completely sure it won't be used */
 static const MonitorRule monrules[] = {
 	/* name       mfact  nmaster scale layout       rotate/reflect                x    y */
-	/* example of a HiDPI laptop monitor:
+	/* example of a HiDPI laptop monitor:*/
 	/*{ "eDP-1",    0.5f,  1,      2,    &layouts[0], WL_OUTPUT_TRANSFORM_NORMAL,   -1,  -1 },*/
 
 	/* defaults */
@@ -147,10 +147,10 @@ static const enum libinput_config_tap_button_map button_map = LIBINPUT_CONFIG_TA
 #define SHCMD(cmd) { .v = (const char*[]){ "/bin/sh", "-c", cmd, NULL } }
 
 /* commands */
-static const char *termcmd[] =     { "alacritty", NULL };
+static const char *termcmd[] =     { "kitty", NULL };
 static const char *menucmd[] =     { "bash", "/home/lynch/rofi.sh", NULL };
-static const char *usercmd[] =     { "alacritty", "-e", "sudo", "sysctl", "kernel.unprivileged_userns_clone=1", NULL };
-static const char *user1cmd[] =    { "alacritty", "-e", "sudo", "sysctl", "kernel.unprivileged_userns_clone=0", NULL };
+static const char *usercmd[] =     { "kitty", "-e", "sudo", "sysctl", "kernel.unprivileged_userns_clone=1", NULL };
+static const char *user1cmd[] =    { "kitty", "-e", "sudo", "sysctl", "kernel.unprivileged_userns_clone=0", NULL };
 static const char *shotcmd[] =     { "bash", "/home/lynch/screenshot.sh", NULL };
 static const char *filebcmd[] =    { "nemo", NULL };
 static const char *tuiapps[] =     { "bash", "/home/lynch/rofiterminalapps.sh", NULL };
@@ -165,7 +165,7 @@ static const Key keys[] = {
 	/* modifier                  key                 function        argument */
 	{ MODKEY,                    XKB_KEY_w,          spawn,          {.v = menu2} },
         { MODKEY,                    XKB_KEY_e,          spawn,          {.v = filebcmd} },
-        { MODKEY,                    XKB_KEY_G,          spawn,          {.v = shotcmd} },
+        { MODKEY,                    XKB_KEY_p,          spawn,          {.v = shotcmd} },
         { 0,     XKB_KEY_XF86AudioMute,                  spawn,          {.v = mute_vol } },
         { 0,     XKB_KEY_XF86AudioLowerVolume,           spawn,          {.v = down_vol } },
         { 0,     XKB_KEY_XF86AudioRaiseVolume,           spawn,          {.v = up_vol } }, 
