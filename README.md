@@ -35,40 +35,40 @@ NetworkManager
 
 BlueZ
 
-Dependencies
-pixman
-xdg-desktop-portal-gtk
-polkit-gnome
-tllist
-fcft
-alacritry
-firejail + qutebrowser   (SUPER + B launches Qutebrowser sandboxed)
-rofi                     (app launcher)
-wbg                      (AUR: yay -S wbg)
-nemo                     (file manager) — SUPER + P
-wlroots 0.19
+Dependencies:
+pixman,
+xdg-desktop-portal-gtk,
+polkit-gnome,
+tllist,
+fcft,
+alacritry,
+firejail + qutebrowser   (SUPER + B launches Qutebrowser sandboxed),
+rofi                     (app launcher),
+wbg                      (AUR: yay -S wbg),
+nemo                     (file manager) — SUPER + P,
+wlroots 0.19,
 wayland-protocols
-mako                     (notification manager)
-fish (optional)          — chsh -s /usr/bin/fish
-python3
-gtk3
-gtk4
-gtk-layer-shell          (for WiFi/Bluetooth/Audio panel)
-speedtest-cli
-bluez
-bluez-utils
-ttf-dejavu               (font for status bar)
+mako                     (notification manager),
+fish (optional)          — chsh -s /usr/bin/fish,
+python3,
+gtk3,
+gtk4,
+gtk-layer-shell          (for WiFi/Bluetooth/Audio panel),
+speedtest-cli,
+bluez,
+bluez-utils,
+ttf-dejavu               (font for status bar),
 
 
 Also required:
 
-slstatus — build and install it for bar info (time, CPU, RAM)
+slstatus — build and install it for bar info (time, CPU, RAM),
 
 grim + slurp — screenshot support
 (Copy JT files into your home directory for this to work.)
-Shortcut: Caps Lock ON + SUPER + G
+Shortcut: Caps Lock ON + SUPER + G,
 
-Configuration
+Configuration:
 
 Copy the folders inside CONFIG to your ~/.config directory
 (themes for Mako, Rofi, etc.)
