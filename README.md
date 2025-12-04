@@ -1,6 +1,7 @@
 ![Desktop](Screenshots/1.png)
 Prebuilt DWL Setup
-(Star this repository so you get all the lastest news and updates)
+
+(Star this repository to get all the lastest news and updates)
 
 This repository contains my pre-configured DWL environment for Arch Linux.
 It includes a custom control panel, themed components, and integrations for Wi-Fi, audio, Bluetooth, screenshots, notifications, and more.
