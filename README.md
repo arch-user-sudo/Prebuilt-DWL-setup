@@ -1,72 +1,102 @@
-    Prebuilt-DWL-setup
-    
+Prebuilt DWL Setup
 
-    * Copy the files inside of the JT folder to your home folder
-    and use $SUPER + W to launch a custom control panel for managing wifi 
-    audio and bluetooth. ( Wallpaper will not work if files are not 
-    copied aswell as the connection panel ) & you obviously need to be using my
-    Pre-built DWL.
+This repository contains my pre-configured DWL environment for Arch Linux.
+It includes a custom control panel, themed components, and integrations for Wi-Fi, audio, Bluetooth, screenshots, notifications, and more.
 
-    ## NB ## 
-    This was designed for arch linux using pipewire Network Manager and Bluez.
+Getting Started
 
-    Launch dwl from tty using dwl -s slstatus for bar time and date to work
+Copy everything inside the JT folder into your home directory.
+This is required for:
 
-    }
+The custom control panel (SUPER + W)
 
-    Dependacies: 
+Wallpaper loading
 
-             pixman
-             xdg-desktop-portal-gtk
-             polkit-gnome
-             tllist
-             fcft
-             kitty
-             firejail + qutebrowser  ( launch with SUPER + B for Auto Firejaling)
-             rofi  (app launcher)
-             wbg   (found on aur)  >>    yay -S wbg
-             nemo  (file manager)  >> Launch with SUPER + P
-             wlroots0.19
-             wayland-protocols
-             mako   ( notification manager )
-             fish (optional) : Change your shell for this to work (sudo chsh -s /usr/bin/fish) & copy fish 
-             config folder for nice folder icons in terminal. Will change the colours to either white or yellow soon.
+Connection panel functionality
 
-             
-             ( build and install slstatus for bar to display time cpu and ram usage )
-             
-             Grim & Slurp ( For Screenshots )   >> Copy files from JT folder into Home folder for this to work
-              ## NB ## Turn Caps Lock on & press $UPER + G to take screenshot
-             
-             python3          |
-             gtk 3            |
-             gtk 4            | 
-             gtk-layer-shell  |    >>   For Wifi/Bluetooth/Audio Panel
-             speedtest-cli    |
-             bluez            |
-             bluez-utils      |
+You must use my pre-built DWL for this setup to work as intended.
 
-             ttf-dejavu (For font on Bar)
+Launch DWL from a TTY using:
 
-             * Copy The Folders In CONFIG to your .config folder for mako, & rofi theme.
-
-             * I'll upload the fastfetch config soon.
-
-             * I'm Lazy, I'll keep this repo up to date over time. 
-
-             * My setup supports the hardened Linux Kernel aswell. check the keybinds in config.h in dwl folder. 
-
-             * To close a window, Turn on Caps Lock, Then Press SUPER + SHIFT + Q with your mouse hovered over the 
-             selected window that you wanna close, I made it this way so its nearly impossible to close something accidentaly. 
-
-             * There are some missing keybind errors that pop up when compiling, dont worry about that. 
-             If you wanna add one of the features, you can find it in config.def.h.
+dwl -s slstatus
 
 
-             * I'm Lazy, I'll keep this repo up to date over time. dw about the long term, i use this for myself so it'll always 
-             get maintained
+This enables the bar with time, CPU, and RAM info.
 
-             Launch dwl from tty using dwl -s slstatus after bulding dwl aswell as slstatus, didnt get this to work with a login manager yet, it just needs a deskttop entry then it will.
+Requirements
+
+This setup was designed for Arch Linux using:
+
+PipeWire
+
+NetworkManager
+
+BlueZ
+
+Dependencies
+pixman
+xdg-desktop-portal-gtk
+polkit-gnome
+tllist
+fcft
+kitty
+firejail + qutebrowser   (SUPER + B launches Qutebrowser sandboxed)
+rofi                     (app launcher)
+wbg                      (AUR: yay -S wbg)
+nemo                     (file manager) — SUPER + P
+wlroots 0.19
+wayland-protocols
+mako                     (notification manager)
+fish (optional)          — chsh -s /usr/bin/fish
+python3
+gtk3
+gtk4
+gtk-layer-shell          (for WiFi/Bluetooth/Audio panel)
+speedtest-cli
+bluez
+bluez-utils
+ttf-dejavu               (font for status bar)
+
+
+Also required:
+
+slstatus — build and install it for bar info (time, CPU, RAM)
+
+grim + slurp — screenshot support
+(Copy JT files into your home directory for this to work.)
+Shortcut: Caps Lock ON + SUPER + G
+
+Configuration
+
+Copy the folders inside CONFIG to your ~/.config directory
+(themes for Mako, Rofi, etc.)
+
+A fastfetch configuration will be added soon.
+
+Fish shell users: copy over the provided fish config for styled folder icons.
+
+Notes & Features
+
+Fully supports the hardened Linux kernel.
+Check custom keybinds inside config.h in the dwl directory.
+
+Window closing is intentionally safe:
+
+Enable Caps Lock
+
+Hover the window with the mouse
+
+Press SUPER + SHIFT + Q
+
+This prevents accidental window closure.
+
+Some minor keybind warnings appear during compilation — these are normal.
+If you want to enable one of the optional features, find it in config.def.h.
+
+Maintenance
+
+I maintain this setup for my personal daily use, so it will continue to be updated and improved over time.
+I don’t use a login manager (TTY enjoyer), but if you want to use one, adding a desktop entry should make it work.
              
 
             
