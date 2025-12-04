@@ -37,29 +37,51 @@ NetworkManager
 BlueZ
 
 Dependencies:
+
 pixman,
+
 xdg-desktop-portal-gtk,
+
 polkit-gnome,
+
 tllist,
+
 fcft,
+
 alacritty,
+
 firejail + qutebrowser   (SUPER + B launches Qutebrowser sandboxed),
+
 rofi                     (app launcher),
+
 wbg                      (AUR: yay -S wbg),
+
 nemo                     (file manager) — SUPER + P,
+
 wlroots 0.19,
+
 wayland-protocols
 mako                     (notification manager),
+
 fish (optional)          — chsh -s /usr/bin/fish,
+
 python3,
+
 gtk3,
+
 gtk4,
+
 gtk-layer-shell          (for WiFi/Bluetooth/Audio panel),
+
 speedtest-cli,
+
 bluez,
+
 bluez-utils,
+
 ttf-dejavu               (font for status bar),
-noto-fonts noto-fonts-emoji noto-fonts-extra
+
+noto-fonts noto-fonts-emoji noto-fonts-extra (fonts for panel)
 
 
 Also required:
