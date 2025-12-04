@@ -97,6 +97,8 @@ Maintenance
 
 I maintain this setup for my personal daily use, so it will continue to be updated and improved over time.
 I don’t use a login manager (TTY enjoyer), but if you want to use one, adding a desktop entry should make it work.
+
+Use CAPS LOCK ON + SUPER + SHIFT + P To exit the window manager.
              
 
             
