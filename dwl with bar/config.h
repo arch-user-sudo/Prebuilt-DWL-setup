@@ -151,7 +151,7 @@ static const char *termcmd[] =     { "kitty", NULL };
 static const char *menucmd[] =     { "bash", "/home/lynch/rofi.sh", NULL };
 static const char *usercmd[] =     { "kitty", "-e", "sudo", "sysctl", "kernel.unprivileged_userns_clone=1", NULL };
 static const char *user1cmd[] =    { "kitty", "-e", "sudo", "sysctl", "kernel.unprivileged_userns_clone=0", NULL };
-static const char *shotcmd[] =     { "bash", "/home/lynch/screenshot.sh", NULL };
+static const char *shotcmd[] =     { "grim", "-g", "$(slurp)", "~/Screenshots/screenshot-$(date +%s).png", NULL }; 
 static const char *filebcmd[] =    { "nemo", NULL };
 static const char *tuiapps[] =     { "bash", "/home/lynch/rofiterminalapps.sh", NULL };
 static const char *up_vol[]   =    { "pactl", "set-sink-volume", "@DEFAULT_SINK@", "+10%",   NULL };
@@ -164,13 +164,13 @@ static const Key keys[] = {
 	/* Note that Shift changes certain key codes: c -> C, 2 -> at, etc. */
 	/* modifier                  key                 function        argument */
 	{ MODKEY,                    XKB_KEY_w,          spawn,          {.v = menu2} },
-        { MODKEY,                    XKB_KEY_e,          spawn,          {.v = filebcmd} },
-        { MODKEY,                    XKB_KEY_p,          spawn,          {.v = shotcmd} },
-        { 0,     XKB_KEY_XF86AudioMute,                  spawn,          {.v = mute_vol } },
-        { 0,     XKB_KEY_XF86AudioLowerVolume,           spawn,          {.v = down_vol } },
-        { 0,     XKB_KEY_XF86AudioRaiseVolume,           spawn,          {.v = up_vol } }, 
-        { MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_L,          spawn,          {.v = usercmd} },
-        { MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_K,          spawn,          {.v = user1cmd} },
+    { MODKEY,                    XKB_KEY_e,          spawn,          {.v = filebcmd} },
+    { MODKEY,                    XKB_KEY_p,          spawn,          {.v = shotcmd} },
+    { 0,     XKB_KEY_XF86AudioMute,                  spawn,          {.v = mute_vol } },
+    { 0,     XKB_KEY_XF86AudioLowerVolume,           spawn,          {.v = down_vol } },
+    { 0,     XKB_KEY_XF86AudioRaiseVolume,           spawn,          {.v = up_vol } }, 
+    { MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_L,          spawn,          {.v = usercmd} },
+    { MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_K,          spawn,          {.v = user1cmd} },
 	{ MODKEY,                    XKB_KEY_b,          spawn,          {.v = browser} },
 	{ MODKEY,                    XKB_KEY_a,          spawn,          {.v = menucmd} },
 	{ MODKEY,                    XKB_KEY_q,          spawn,          {.v = termcmd} },
