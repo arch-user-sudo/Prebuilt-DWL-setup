@@ -143,7 +143,7 @@ static const int cursor_timeout = 5;
 #define SHCMD(cmd) { .v = (const char*[]){ "/bin/sh", "-c", cmd, NULL } }
 
 /* commands */
-static const char *termcmd[] =     { "kitty", NULL };
+static const char *termcmd[] =     { "alacritty", NULL };
 static const char *menucmd[] =     { "bash", "/home/lynch/rofi.sh", NULL };
 static const char *menu2[] =       { "bash", "/home/lynch/menu2.sh", NULL };
 static const char *up_vol[]   =    { "pactl", "set-sink-volume", "@DEFAULT_SINK@", "+10%",   NULL };
