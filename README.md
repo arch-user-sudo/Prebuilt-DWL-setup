@@ -38,6 +38,8 @@ BlueZ
 
 Dependencies:
 
+*Use sh scripts OR install them manually*
+
 pixman,
 xdg-desktop-portal-gtk,
 polkit-gnome,
