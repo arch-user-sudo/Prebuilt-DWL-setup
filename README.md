@@ -66,7 +66,7 @@
              * I'm Lazy, I'll keep this repo up to date over time. dw about the long term, i use this for myself so it'll always 
              get maintained
 
-             Launch dwl from tty using dwl -s slstatus 
+             Launch dwl from tty using dwl -s slstatus after bulding dwl aswell as slstatus, didnt get this to work with a login manager yet, it just needs a deskttop entry then it will.
              
 
             
