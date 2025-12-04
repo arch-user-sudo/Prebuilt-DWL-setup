@@ -14,6 +14,7 @@ The custom control panel (SUPER + W)
 Wallpaper loading
 
 Connection panel functionality
+![Connection Panel](Screenshots/2.png)
 
 You must use my pre-built DWL for this setup to work as intended.
 
