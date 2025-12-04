@@ -39,7 +39,7 @@ xdg-desktop-portal-gtk
 polkit-gnome
 tllist
 fcft
-kitty
+alacritry
 firejail + qutebrowser   (SUPER + B launches Qutebrowser sandboxed)
 rofi                     (app launcher)
 wbg                      (AUR: yay -S wbg)
