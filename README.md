@@ -1,3 +1,4 @@
+![Desktop](Screenshots/1.png)
 Prebuilt DWL Setup
 
 This repository contains my pre-configured DWL environment for Arch Linux.
