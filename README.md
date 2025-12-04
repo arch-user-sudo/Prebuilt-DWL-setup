@@ -58,6 +58,7 @@ speedtest-cli,
 bluez,
 bluez-utils,
 ttf-dejavu               (font for status bar),
+noto-fonts noto-fonts-emoji noto-fonts-extra
 
 
 Also required:
