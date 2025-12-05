@@ -1,3 +1,3 @@
 #!/usr/bin/bash
 
-pacman -S pixman xdg-desktop-portal-gtk polkit-gnome tllist fcft kitty starship firejail qutebrowser rofi nemo wlroots0.19 wayland-protocols mako fish python3 gtk3 gtk4 gtk-layer-shell speedtest-cli bluez bluez-utils ttf-dejavu noto-fonts noto-fonts-emoji noto-fonts-extra
+pacman -S pixman xdg-desktop-portal-gtk polkit-gnome tllist fcft kitty starship ttf-dejavu firejail qutebrowser rofi nemo wlroots0.19 wayland-protocols mako fish python3 gtk3 gtk4 gtk-layer-shell speedtest-cli bluez bluez-utils ttf-dejavu noto-fonts noto-fonts-emoji noto-fonts-extra
