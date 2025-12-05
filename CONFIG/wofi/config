@@ -1,0 +1,10 @@
+# Center the window
+location=center
+anchor=center
+
+# Show applications only
+show=drun
+
+# Optional: adjust width/height
+width=600
+lines=4

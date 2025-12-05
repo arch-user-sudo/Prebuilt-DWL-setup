@@ -1,6 +1,7 @@
 font=Sans 11
-background-color=#3E302Aff
-text-color=#FFFFFFFF
+background-color=#111111B3
+text-color=#FFFFFF
 border-size=1
-border-color=#666666B3
+border-color=#FA9609
 padding=10
+margin=20
