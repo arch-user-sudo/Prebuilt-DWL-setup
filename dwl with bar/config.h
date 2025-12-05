@@ -17,7 +17,7 @@ static const unsigned int gappoh           = 20; /* horiz outer gap between wind
 static const unsigned int gappov           = 10; /* vert outer gap between windows and screen edge */
 static const int monoclegaps               = 1;  /* 1 means outer gaps in monocle layout */
 static const int cursor_timeout            = 5;
-static const char *fonts[]                 = {"DejaVu Sans Mono ExtraLight:size=10"};
+static const char *fonts[]                 = {"DejaVu Sans Mono Book:size=10"};
 static const float rootcolor[]             = COLOR(0x000000ff);
 /* This conforms to the xdg-protocol. Set the alpha to zero to restore the old behavior */
 static const float fullscreen_bg[]         = {0.0f, 0.0f, 0.0f, 1.0f}; /* You can also use glsl colors */
