@@ -17,7 +17,7 @@ alias matrix='cmatrix -u 8 -C white'
 alias scan='clamscan -r -i'
 alias optimize='sudo fstrim -v /'
 alias dwll='bash ~/dwl.sh'
-set -g fish_greeting "Hi"
+set -g fish_greeting "Hi Kearan"
 
 fastfetch
 # FUNCTIONS
@@ -32,4 +32,6 @@ set -U fish_color_user yellow
 set -U fish_color_cwd yellow
 set -x LS_COLORS "ex=38;5;33:ln=38;5;37:so=38;5;213:pi=38;5;220:di=38;5;147:*.txt=38;5;15:*.md=38;5;207:*.sh=38;5;82:*.py=38;5;75:*.json=38;5;214:*.yml=38;5;159:"
 
-set -x GSK_RENDERER ngl
+#set -x GSK_RENDERER ngl
+
+starship init fish | source

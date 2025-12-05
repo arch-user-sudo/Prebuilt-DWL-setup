@@ -17,13 +17,13 @@ static const unsigned int gappoh           = 20; /* horiz outer gap between wind
 static const unsigned int gappov           = 10; /* vert outer gap between windows and screen edge */
 static const int monoclegaps               = 1;  /* 1 means outer gaps in monocle layout */
 static const int cursor_timeout            = 5;
-static const char *fonts[]                 = {"DejaVu Sans Mono Regular:size=10"};
+static const char *fonts[]                 = {"DejaVuSans-ExtraLight:size=10"};
 static const float rootcolor[]             = COLOR(0x000000ff);
 /* This conforms to the xdg-protocol. Set the alpha to zero to restore the old behavior */
 static const float fullscreen_bg[]         = {0.0f, 0.0f, 0.0f, 1.0f}; /* You can also use glsl colors */
 static uint32_t colors[][3]                = {
 	/*               fg          bg          border    */
-	[SchemeNorm] = { 0xffffffff, 0x111111B3, 0x333333B3 },
+	[SchemeNorm] = { 0xffffffff, 0x161616B3, 0x333333B3 },
 	[SchemeSel]  = { 0xffffffff, 0x333333B3, 0x666666B3 },
 	[SchemeUrg]  = { 0,          0,          0x770000B3 },
 };
@@ -147,10 +147,10 @@ static const enum libinput_config_tap_button_map button_map = LIBINPUT_CONFIG_TA
 #define SHCMD(cmd) { .v = (const char*[]){ "/bin/sh", "-c", cmd, NULL } }
 
 /* commands */
-static const char *termcmd[] =     { "alacritty", NULL };
-static const char *menucmd[] =     { "bash", "/home/lynch/wofi.sh", NULL };
-static const char *usercmd[] =     { "alacritty", "-e", "sudo", "sysctl", "kernel.unprivileged_userns_clone=1", NULL };
-static const char *user1cmd[] =    { "alacritty", "-e", "sudo", "sysctl", "kernel.unprivileged_userns_clone=0", NULL };
+static const char *termcmd[] =     { "kitty", NULL };
+static const char *menucmd[] =     { "bash", "/home/lynch/rofi.sh", NULL };
+static const char *usercmd[] =     { "kitty", "-e", "sudo", "sysctl", "kernel.unprivileged_userns_clone=1", NULL };
+static const char *user1cmd[] =    { "kitty", "-e", "sudo", "sysctl", "kernel.unprivileged_userns_clone=0", NULL };
 static const char *shotcmd[] =     { "grim", "-g", "$(slurp)", "~/Screenshots/screenshot-$(date +%s).png", NULL }; 
 static const char *filebcmd[] =    { "nemo", NULL };
 static const char *tuiapps[] =     { "bash", "/home/lynch/rofiterminalapps.sh", NULL };
