@@ -1,0 +1,26 @@
+[window]
+opacity = 0.71
+padding = { x = 20, y = 20 }
+decorations = "none"
+
+
+[font]
+size = 10
+
+[font.normal]
+family = "DejaVu Sans Mono"
+style = "Book"
+
+[font.bold]
+family = "DejaVu Sans Mono"
+style = "Bold"
+
+[font.italic]
+family = "DejaVu Sans Mono"
+style = "Italic"
+
+[font.bold_italic]
+family = "DejaVu Sans Mono"
+style = "Bold Italic"
+[colors.primary]
+background = "#111111"  # or your preferred color
