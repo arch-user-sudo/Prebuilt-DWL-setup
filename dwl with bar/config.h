@@ -38,8 +38,8 @@ static int log_level = WLR_ERROR;
 static const char *const autostart[] = {
         "wbg", "/home/lynch/1.png", NULL,
         "mako", NULL,
-	"/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1", NULL,                            
-        "/usr/lib/xdg-desktop-portal-gtk", NULL,  
+	/*"/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1", NULL,*/                            
+        /*"/usr/lib/xdg-desktop-portal-gtk", NULL,*/  
 	NULL /* terminate */
 };
 
@@ -73,7 +73,7 @@ static const MonitorRule monrules[] = {
 	/*{ "eDP-1",    0.5f,  1,      2,    &layouts[0], WL_OUTPUT_TRANSFORM_NORMAL,   -1,  -1 },*/
 
 	/* defaults */
-	{ "DP-1",       0.5f, 1,      1,    &layouts[0], WL_OUTPUT_TRANSFORM_NORMAL,   0,  0 },
+	{ "DP-1",       0.5f, 1,      1,    &layouts[0], WL_OUTPUT_TRANSFORM_NORMAL,   -1,  -1 },
 
 };
 
