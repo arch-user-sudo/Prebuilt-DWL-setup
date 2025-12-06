@@ -1,58 +1,44 @@
 * {
-    background: #161616B3;
-    tbackground: #888888f1;
+    background: rgba(0, 0, 0, 0.30);
+    tbackground: #282828e6;
     foreground: #ffffff;
     textcolor: #ffffff;
     accent1: #cc241d;
     accent2: #98971a;
     accent3: #d79921;
     accent4: #458588;
-    selection: #333333;
+    selection: #504871;
     myhigh: bold #98971a;
 }
 
-configuration {
-    location: 0;          // center
-    xoffset: 0;
-    yoffset: 0;
-    padding: 0;
-     font: "Ubuntu Mono 16";
- fixed-num-lines: true;
- show-icons: true;
- icon-theme: "COSMIC";
- eh: 1;
- dpi: 75;
- display-drun: "Apps";
-}
 
 window {
-  width: 60%;
-  height: 46%;
+  width: 800px;
+  height: 700px;
   padding: 0;
   border: 0px;
   border-color: var(foreground);
-  border-radius: 0;
-  transparency: "none";
+  border-radius: 7;
+  transparency: "real";
   background-color: #00000000;
 }
 
 scrollbar {
-  background-color: transparent;
-  handle-width: 6px;
-  handle-color: #333333A1;
-  handle-rounded-corners: true;
-   orientation: horizontal;
+  background-color: var(background);
+  handle-width: 8px;
+  handle-color: var(accent3);
+  handle-rounded-corners: false;
 }
 
 box {
-  orientation: horizontal;
+  orientation: vertical;
   spacing: 0px;
 }
 
 textbox {
   enabled: true;
-  background-color: var(foreground);
-  border: 1px;
+  background-color: var(background);
+  border: 2px;
   border-color: var(accent1);
 }
 
@@ -60,56 +46,58 @@ entry {
   placeholder: "Search...";
   placeholder-color: var(foreground);
   color: var(foreground);
-  border: 0;
+  border: 1;
   border-color: var(foreground);
-  padding: 10px;
-  border-radius: 0;
-  background-color: transparent;
+  padding: 12px;
+  border-radius: 20;
+  background-color: var(background);
 }
 
 listview {
-   orientation: horizontal;
-  lines: 9;
-  margin: 0 0 0 0;
-  padding: 20;
-  columns: 3;
+  lines: 7;
+  margin: 10 0 0 0;
+  padding: 40;
+  columns: 1;
   background-color: var(background);
-  scrollbar: true;
+  scrollbar: false;
   cycle: false;
   border: 1;
-  border-radius: 0;
-  border-color: #777777B3;
+  border-radius: 7;
+  border-color: var(foreground);
 }
 
 mainbox {
-  background-color: transparent;
+  background-color: #00000000;
   spacing: 0; 
   padding: 0;
   children: [ inputbar, listview ];
 }
 
-element-icon{
- size: 50;
- background-color: inherit;
- text-color: inherit;
-}
-
 inputbar {
-  padding: 10;
+  padding: 120;
   background-color: var(background);
-  //background-image: url("~/.config/rofi/img/4.png");
+  //background-image: url("img/bg2.png");
   children: [ prompt , seperator , entry ];
   border: 1;
-  border-radius: 0;
-  border-color: #777777B3;
+  border-radius: 7;
+  border-color: var(foreground);
 }
 
 prompt{
  enabled: false;
+ padding: 12;
+ text-color: var(foreground);
+ border: 2;
+ border-color: var(accent2);
+ border-radius: 4;
+ background-color: var(background);
 }
 
 seperator{
  enabled: false; 
+ padding: 0 50 0 50;
+ expand: false;
+ background-color: #00000000;
 }
 
 element{
@@ -159,8 +147,11 @@ element-text{
 }
 
 element selected.normal {
- background-color: #333333A1;
- text-color: #ffffff;
+ background-color: var(background);
+ border-color: var(foreground);
+ border: 2;
+
+ text-color: var(foreground);
 }
 
 element selected.urgent {
@@ -179,4 +170,13 @@ element-icon{
  text-color: inherit;
 }
 
+button{
+ spacing: 0;
+ background-color: var(background);
+ text-color: var(foreground);
+}
 
+button selected{
+ background-color: var(selection);
+ text-color: var(foreground);
+}
