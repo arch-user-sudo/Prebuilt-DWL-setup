@@ -24,7 +24,7 @@ static const float fullscreen_bg[]         = {0.0f, 0.0f, 0.0f, 1.0f}; /* You ca
 static uint32_t colors[][3]                = {
 	/*               fg          bg          border    */
 	[SchemeNorm] = { 0xffffffff, 0x161616B3, 0x333333B3 },
-	[SchemeSel]  = { 0xffffffff, 0x333333A1, 0x666666B3 },
+	[SchemeSel]  = { 0xffffffff, 0x222222A1, 0x666666B3 },
 	[SchemeUrg]  = { 0,          0,          0x770000B3 },
 };
 
