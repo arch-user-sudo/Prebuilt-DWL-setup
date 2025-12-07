@@ -46,11 +46,11 @@ static const char *const autostart[] = {
 
 /* NOTE: ALWAYS keep a rule declared even if you don't use rules (e.g leave at least one example) */
 static const Rule rules[] = {
-	/* app_id             title       tags mask     isfloating   monitor */
+	/* app_id                      title       tags mask     isfloating   monitor */
 	/* examples: */
-	{ "Gimp_EXAMPLE",     NULL,       0,            1,           -1 }, /* Start on currently visible tags floating, not tiled */
-	{ "firefox_EXAMPLE",  NULL,       1 << 8,       0,           -1 }, /* Start on ONLY tag "9" */
-	{ "org.connectioncentre.app", NULL, 0, 1, -1 },
+	{ "Gimp_EXAMPLE",              NULL,       0,            1,           -1 }, /* Start on currently visible tags floating, not tiled */
+	{ "firefox_EXAMPLE",           NULL,       1 << 8,       0,           -1 }, /* Start on ONLY tag "9" */
+	{ "org.connectioncentre.app",  NULL,       0,            1,           -1 },
 };
 
 /* layout(s) */
@@ -164,13 +164,13 @@ static const Key keys[] = {
 	/* Note that Shift changes certain key codes: c -> C, 2 -> at, etc. */
 	/* modifier                  key                 function        argument */
 	{ MODKEY,                    XKB_KEY_w,          spawn,          {.v = menu2} },
-    { MODKEY,                    XKB_KEY_e,          spawn,          {.v = filebcmd} },
-    { MODKEY,                    XKB_KEY_p,          spawn,          {.v = shotcmd} },
-    { 0,     XKB_KEY_XF86AudioMute,                  spawn,          {.v = mute_vol } },
-    { 0,     XKB_KEY_XF86AudioLowerVolume,           spawn,          {.v = down_vol } },
-    { 0,     XKB_KEY_XF86AudioRaiseVolume,           spawn,          {.v = up_vol } }, 
-    { MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_L,          spawn,          {.v = usercmd} },
-    { MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_K,          spawn,          {.v = user1cmd} },
+    	{ MODKEY,                    XKB_KEY_e,          spawn,          {.v = filebcmd} },
+    	{ MODKEY,                    XKB_KEY_p,          spawn,          {.v = shotcmd} },
+    	{ 0,     XKB_KEY_XF86AudioMute,                  spawn,          {.v = mute_vol } },
+    	{ 0,     XKB_KEY_XF86AudioLowerVolume,           spawn,          {.v = down_vol } },
+    	{ 0,     XKB_KEY_XF86AudioRaiseVolume,           spawn,          {.v = up_vol } }, 
+    	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_L,          spawn,          {.v = usercmd} },
+    	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_K,          spawn,          {.v = user1cmd} },
 	{ MODKEY,                    XKB_KEY_b,          spawn,          {.v = browser} },
 	{ MODKEY,                    XKB_KEY_a,          spawn,          {.v = menucmd} },
 	{ MODKEY,                    XKB_KEY_q,          spawn,          {.v = termcmd} },
