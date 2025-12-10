@@ -171,6 +171,7 @@ static const Key keys[] = {
     	{ 0,     XKB_KEY_XF86AudioRaiseVolume,           spawn,          {.v = up_vol } }, 
     	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_L,          spawn,          {.v = usercmd} },
     	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_K,          spawn,          {.v = user1cmd} },
+			{ MODKEY,                    XKB_KEY_u,          togglebar,      {0} },
 	{ MODKEY,                    XKB_KEY_b,          spawn,          {.v = browser} },
 	{ MODKEY,                    XKB_KEY_a,          spawn,          {.v = menucmd} },
 	{ MODKEY,                    XKB_KEY_q,          spawn,          {.v = termcmd} },
