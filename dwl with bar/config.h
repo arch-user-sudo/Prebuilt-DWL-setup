@@ -5,11 +5,11 @@
                         (hex & 0xFF) / 255.0f }
 /* appearance */
 static const int sloppyfocus               = 1;  /* focus follows mouse */
-static const int bypass_surface_visibility = 0;  /* 1 means idle inhibitors will disable idle tracking even if it's surface isn't visible  */
+static const int bypass_surface_visibility = 1;  /* 1 means idle inhibitors will disable idle tracking even if it's surface isn't visible  */
 static const unsigned int borderpx         = 1;  /* border pixel of windows */
 static const int showbar                   = 1; /* 0 means no bar */
 static const int topbar                    = 1; /* 0 means bottom bar */
-static const int smartgaps                 = 0;  /* 1 means no outer gap when there is only one window */
+static const int smartgaps                 = 1;  /* 1 means no outer gap when there is only one window */
 static const int smartborders              = 1;  /* 0 means no borders when there is one window in the workspace or tag*/
 static const unsigned int gappih           = 6; /* horiz inner gap between windows */
 static const unsigned int gappiv           = 6; /* vert inner gap between windows */
@@ -24,7 +24,7 @@ static const float fullscreen_bg[]         = {0.0f, 0.0f, 0.0f, 1.0f}; /* You ca
 static uint32_t colors[][3]                = {
 	/*               fg          bg          border    */
 	[SchemeNorm] = { 0xffffffff, 0x161616B3, 0x333333B3 },
-	[SchemeSel]  = { 0xffffffff, 0x222222A1, 0x666666B3 },
+	[SchemeSel]  = { 0xffffffff, 0x444444B3, 0x666666B3 },
 	[SchemeUrg]  = { 0,          0,          0x770000B3 },
 };
 
@@ -56,9 +56,9 @@ static const Rule rules[] = {
 /* layout(s) */
 static const Layout layouts[] = {
 	/* symbol     arrange function */
-	{ "󱠏   ",      tile },
-	{ "󱠑   ",      NULL },    /* no layout function means floating behavior */
-	{ "󱠒   ",      monocle },
+	{ " 󱠏   ",      tile },
+	{ " 󱠑   ",      NULL },    /* no layout function means floating behavior */
+	{ " 󱠒   ",      monocle },
 };
 
 /* monitors */
