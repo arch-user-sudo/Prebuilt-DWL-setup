@@ -151,7 +151,7 @@ static const char *termcmd[] =     { "alacritty", NULL };
 static const char *menucmd[] =     { "bash", "/home/lynch/rofi.sh", NULL };
 static const char *usercmd[] =     { "alacritty", "-e", "sudo", "sysctl", "kernel.unprivileged_userns_clone=1", NULL };
 static const char *user1cmd[] =    { "alacritty", "-e", "sudo", "sysctl", "kernel.unprivileged_userns_clone=0", NULL };
-static const char *shotcmd[] =     { "grim", "-g", "$(slurp)", "~/Screenshots/screenshot-$(date +%s).png", NULL }; 
+static const char *shotcmd[] =     { "$HOME/screenshot.sh", NULL }; 
 static const char *filebcmd[] =    { "nemo", NULL };
 static const char *tuiapps[] =     { "bash", "/home/lynch/rofiterminalapps.sh", NULL };
 static const char *up_vol[]   =    { "pactl", "set-sink-volume", "@DEFAULT_SINK@", "+10%",   NULL };
