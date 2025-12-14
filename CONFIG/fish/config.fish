@@ -16,7 +16,10 @@ alias fetch2='fastfetch --logo arch'
 alias matrix='cmatrix -u 8 -C white'
 alias scan='clamscan -r -i'
 alias optimize='sudo fstrim -v /'
-alias dwll='bash ~/dwl.sh'
+alias dwll='slstatus -s | dwl'
+alias qute='nohup firejail qutebrowser &'
+alias screenshot='bash ~/screenshot.sh'
+
 set -g fish_greeting "Hi Kearan"
 
 fastfetch
@@ -35,3 +38,5 @@ set -x LS_COLORS "ex=38;5;33:ln=38;5;37:so=38;5;213:pi=38;5;220:di=38;5;147:*.tx
 #set -x GSK_RENDERER ngl
 
 starship init fish | source
+zoxide init fish | source
+

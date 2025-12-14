@@ -1,3 +1,3 @@
 #!/usr/bin/bash
 
-yay -S wbg
+yay -S wbg neofetch freshfetch-bin 
