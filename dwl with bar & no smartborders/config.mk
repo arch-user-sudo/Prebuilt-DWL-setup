@@ -8,9 +8,6 @@ CFLAGS += -funroll-loops
 _VERSION = 0.8-dev
 VERSION  = `git describe --tags --dirty 2>/dev/null || echo $(_VERSION)`
 
-_VERSION = 0.8-dev
-VERSION  = `git describe --tags --dirty 2>/dev/null || echo $(_VERSION)`
-
 PKG_CONFIG = pkg-config
 
 # paths
@@ -44,4 +41,3 @@ XLIBS =
 # To avoid warnings about them, we do not use -std=c99 and instead of using the
 # gmake default 'CC=c99', we use cc.
 CC = cc
-ENABLE_VSYNC = 0

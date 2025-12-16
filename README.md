@@ -107,6 +107,12 @@ I maintain this setup for my personal daily use, so it will continue to be updat
 I don’t use a login manager (TTY enjoyer), but if you want to use one, adding a desktop entry should make it work.
 
 Use CAPS LOCK ON + SUPER + SHIFT + P To exit the window manager.
+
+The "dwl with bar" has this weird glitch when you have windows opened in tiling layout and you switch to floating, its nothing major, 
+all the tilling windows just fills up the screen. So thats why i created the "dwl with bar and no smartborders" prebuild so end users and myself
+can have something that works perfectly with no surprises. but. i still use the normal "dwl with bar" because i never use the floating mode. 
+
+
              
 
             
