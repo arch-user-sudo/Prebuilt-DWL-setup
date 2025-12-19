@@ -26,6 +26,8 @@ static uint32_t colors[][3]                = {
 	[SchemeNorm] = { 0xffffffff, 0x161616B3, 0x333333B3 },
 	[SchemeSel]  = { 0xffffffff, 0x4444441A, 0x666666B3 },
 	[SchemeUrg]  = { 0,          0,          0x770000B3 },
+	[SchemeVar]  = { 0xffffff26, 0x161616B3, 0x333333B3 },  /*Scheme of Title Bar*/
+
 };
 
 /* tagging */

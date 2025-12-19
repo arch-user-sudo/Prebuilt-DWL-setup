@@ -25,6 +25,7 @@ static uint32_t colors[][3]                = {
 	[SchemeNorm] = { 0xffffffff, 0x111111B3, 0x333333B3 },
 	[SchemeSel]  = { 0xffffffff, 0x333333B3, 0x666666B3 },
 	[SchemeUrg]  = { 0,          0,          0x770000B3 },
+	[SchemeVan]  = { 0xffffffB3, 0x161616B3, 0x333333B3 },
 };
 
 /* tagging */

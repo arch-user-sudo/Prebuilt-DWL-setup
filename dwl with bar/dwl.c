@@ -88,7 +88,7 @@
 #define PREFIX(str, prefix)     !strncmp(str, prefix, strlen(prefix))
 
 /* enums */
-enum { SchemeNorm, SchemeSel, SchemeUrg }; /* color schemes */
+enum { SchemeNorm, SchemeSel, SchemeUrg, SchemeVar }; /* color schemes */
 enum { CurNormal, CurPressed, CurMove, CurResize }; /* cursor */
 enum { XDGShell, LayerShell, X11 }; /* client types */
 enum { LyrBg, LyrBottom, LyrTile, LyrFloat, LyrTop, LyrFS, LyrOverlay, LyrBlock, NUM_LAYERS }; /* scene layers */
@@ -1696,7 +1696,7 @@ drawbar(Monitor *m)
 
 	if ((w = m->b.width - tw - x) > m->b.height) {
 		if (c) {
-			drwl_setscheme(m->drw, colors[m == selmon ? SchemeNorm : SchemeNorm]);
+			drwl_setscheme(m->drw, colors[m == selmon ? SchemeVar : SchemeVar]);
 			drwl_text(m->drw, x, 0, w, m->b.height, m->lrpad / 2, client_get_title(c), 0);
 			if (c && c->isfloating)
 				drwl_rect(m->drw, x + boxs, boxs, boxw, boxw, 0, 0);
