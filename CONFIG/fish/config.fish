@@ -19,6 +19,8 @@ alias optimize='sudo fstrim -v /'
 alias dwll='slstatus -s | dwl'
 alias qute='nohup firejail qutebrowser &'
 alias screenshot='bash ~/screenshot.sh'
+alias wp='nohup python ~/wallpaper.py &'
+
 
 set -g fish_greeting "Hi Kearan"
 
@@ -35,8 +37,19 @@ set -U fish_color_user yellow
 set -U fish_color_cwd yellow
 set -x LS_COLORS "ex=38;5;33:ln=38;5;37:so=38;5;213:pi=38;5;220:di=38;5;147:*.txt=38;5;15:*.md=38;5;207:*.sh=38;5;82:*.py=38;5;75:*.json=38;5;214:*.yml=38;5;159:"
 
-#set -x GSK_RENDERER ngl
+set -x GSK_RENDERER ngl
+function fish_prompt
+   # Keep everything else as is
+    echo -n " >   "
+end
 
-starship init fish | source
+
 zoxide init fish | source
 
+starship init fish | source
+
+# Disable Client-Side Decorations (CSD) for GTK and Qt
+set -gx GTK_CSD 0
+set -gx QT_WAYLAND_DISABLE_WINDOWDECORATION 1
+
+export vblank_mode=1

@@ -1696,7 +1696,7 @@ drawbar(Monitor *m)
 			if (c && c->isfloating)
 				drwl_rect(m->drw, x + boxs, boxs, boxw, boxw, 0, 0);
 		} else {
-			drwl_setscheme(m->drw, colors[SchemeNorm]);
+			drwl_setscheme(m->drw, colors[SchemeVan]);
 			drwl_rect(m->drw, x, 0, w, m->b.height, 1, 1);
 		}
 	}

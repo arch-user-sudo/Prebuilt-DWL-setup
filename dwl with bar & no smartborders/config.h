@@ -22,10 +22,10 @@ static const float rootcolor[]             = COLOR(0x000000ff);
 static const float fullscreen_bg[]         = {0.0f, 0.0f, 0.0f, 1.0f}; /* You can also use glsl colors */
 static uint32_t colors[][3]                = {
 	/*               fg          bg          border    */
-	[SchemeNorm] = { 0xffffffff, 0x161616B3, 0x333333B3 },
-	[SchemeSel]  = { 0xffffffff, 0x4444441A, 0x666666B3 },
+	[SchemeNorm] = { 0xffffffff, 0x222222B2, 0x333333B3 },
+	[SchemeSel]  = { 0xffffffff, 0x111111B2, 0x666666B3 },
 	[SchemeUrg]  = { 0,          0,          0x770000B3 },
-	[SchemeVan]  = { 0xffffff26, 0x161616B3, 0x333333B3 },
+	[SchemeVan]  = { 0xffffffff, 0x111111B2, 0x333333B3 },
 };
 
 /* tagging */
@@ -36,10 +36,12 @@ static int log_level = WLR_ERROR;
 
 /* Autostart */
 static const char *const autostart[] = {
-        "wbg", "-s", "/home/lynch/1.png", NULL,
+        "wbg", "-s", "/home/lynch/13.png", NULL,
         /*"mako", NULL,*/
 	/*"/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1", NULL,*/                            
         /*"/usr/lib/xdg-desktop-portal-gtk", NULL,*/
+	
+
 	NULL /* terminate */
 };
 
@@ -56,9 +58,9 @@ static const Rule rules[] = {
 /* layout(s) */
 static const Layout layouts[] = {
 	/* symbol     arrange function */
-	{ " 󱠏 ",      tile },
-	{ " 󱠑 ",      NULL },    /* no layout function means floating behavior */
-	{ " 󱠒 ",      monocle },
+	{ " 󱠏   ",      tile },
+	{ " 󱠑   ",      NULL },    /* no layout function means floating behavior */
+	{ " 󱠒   ",      monocle },
 };
 
 /* monitors */
@@ -147,17 +149,17 @@ static const enum libinput_config_tap_button_map button_map = LIBINPUT_CONFIG_TA
 #define SHCMD(cmd) { .v = (const char*[]){ "/bin/sh", "-c", cmd, NULL } }
 
 /* commands */
-static const char *termcmd[] =     { "alacritty", NULL };
+static const char *termcmd[] =     { "kitty", NULL };
 static const char *menucmd[] =     { "bash", "/home/lynch/rofi.sh", NULL };
-static const char *usercmd[] =     { "alacritty", "-e", "sudo", "sysctl", "kernel.unprivileged_userns_clone=1", NULL };
-static const char *user1cmd[] =    { "alacritty", "-e", "sudo", "sysctl", "kernel.unprivileged_userns_clone=0", NULL };
-static const char *shotcmd[] =     { "$HOME/screenshot.sh", NULL }; 
+static const char *usercmd[] =     { "kitty", "-e", "sudo", "sysctl", "kernel.unprivileged_userns_clone=1", NULL };
+static const char *user1cmd[] =    { "kitty", "-e", "sudo", "sysctl", "kernel.unprivileged_userns_clone=0", NULL };
+static const char *shotcmd[] =     { "/home/lynch/screenshot.sh", NULL }; 
 static const char *filebcmd[] =    { "nemo", NULL };
 static const char *tuiapps[] =     { "bash", "/home/lynch/rofiterminalapps.sh", NULL };
 static const char *up_vol[]   =    { "pactl", "set-sink-volume", "@DEFAULT_SINK@", "+10%",   NULL };
 static const char *down_vol[] =    { "pactl", "set-sink-volume", "@DEFAULT_SINK@", "-10%",   NULL };
 static const char *mute_vol[] =    { "pactl", "set-sink-mute",   "@DEFAULT_SINK@", "toggle", NULL };
-static const char *browser[] =     { "firejail", "qutebrowser", NULL };
+static const char *browser[] =     { "python", "/home/lynch/wallpaper.py", NULL };
 static const char *menu2[] =       { "bash", "/home/lynch/menu2.sh", NULL };
 
 static const Key keys[] = {

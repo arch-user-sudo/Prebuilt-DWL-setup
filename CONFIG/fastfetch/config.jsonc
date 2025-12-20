@@ -49,7 +49,7 @@
         },
         {
             "type": "disk",
-            "key": "└ └",
+            "key": "│ └",
             "keyColor": "white"
         },
         {
@@ -83,40 +83,40 @@
         },
         {
             "type": "shell",
-            "key": "└ └",
+            "key": "│ ├",
             "keyColor": "white"
         },
         //"break",
-      //  {
-     //       "type": "de",
-     //       "key": " DE",
-    //        "keyColor": "white"
-   //     },
-  //      {
-   //         "type": "lm",
-  //          "key": "│ ├",
-   //         "keyColor": "white"
-  //      },
- //       {
- //           "type": "wm",
- //           "key": "│ ├",
- //           "keyColor": "white"
- //       },
- //       {
- //           "type": "wmtheme",
- //           "key": "│ ├󰉼",
- //           "keyColor": "white"
- //       },
- //       {
- //           "type": "terminal",
- //           "key": "└ └",
- //           "keyColor": "white"
-  //      },
+          {
+            "type": "de",
+            "key": " DE",
+            "keyColor": "white"
+        },
+        {
+            "type": "lm",
+            "key": "│ ├",
+            "keyColor": "white"
+        },
+        {
+            "type": "wm",
+            "key": "│ ├",
+            "keyColor": "white"
+        },
+        {
+            "type": "wmtheme",
+            "key": "│ ├󰉼",
+            "keyColor": "white"
+        },
+        {
+            "type": "terminal",
+            "key": "│ └",
+            "keyColor": "white"
+        },
         {
             "type": "custom",
             "format": "\u001b[90m└────────────────────────────────────────────────────┘"
         },
- //       "break",
+        "break",
         {
             "type": "custom",
             "format": "\u001b[90m┌────────────────────────────────────────────────────┐"
@@ -142,9 +142,9 @@
             "format": "\u001b[90m└───────────────────────────────────── \u001b[31mx \u001b[32mx \u001b[33mx \u001b[34mx \u001b[35mx \u001b[36mx \u001b[0mx ┘"
         },
 
-//        {
-//            "type": "colors"
-//        },
+        //{
+        //    "type": "colors"
+        //},
 
 
 
