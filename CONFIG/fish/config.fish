@@ -20,7 +20,7 @@ alias dwll='slstatus -s | dwl'
 alias qute='nohup firejail qutebrowser &'
 alias screenshot='bash ~/screenshot.sh'
 alias wp='nohup python ~/wallpaper.py &'
-
+alias launch='bash ~/fzflauncher.sh'
 
 set -g fish_greeting "Hi Kearan"
 
