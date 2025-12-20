@@ -138,14 +138,33 @@ static const int cursor_timeout = 5;
 #define SHCMD(cmd) { .v = (const char*[]){ "/bin/sh", "-c", cmd, NULL } }
 
 /* commands */
-static const char *termcmd[] = { "foot", NULL };
-static const char *menucmd[] = { "wmenu-run", NULL };
+static const char *termcmd[] =     { "alacritty", NULL };
+static const char *menucmd[] =     { "bash", "/home/lynch/rofi.sh", NULL };
+static const char *usercmd[] =     { "alacritty", "-e", "sudo", "sysctl", "kernel.unprivileged_userns_clone=1", NULL };
+static const char *user1cmd[] =    { "alacritty", "-e", "sudo", "sysctl", "kernel.unprivileged_userns_clone=0", NULL };
+static const char *shotcmd[] =     { "/home/lynch/screenshot.sh", NULL }; 
+static const char *filebcmd[] =    { "nemo", NULL };
+static const char *up_vol[]   =    { "pactl", "set-sink-volume", "@DEFAULT_SINK@", "+10%",   NULL };
+static const char *down_vol[] =    { "pactl", "set-sink-volume", "@DEFAULT_SINK@", "-10%",   NULL };
+static const char *mute_vol[] =    { "pactl", "set-sink-mute",   "@DEFAULT_SINK@", "toggle", NULL };
+static const char *browser[] =     { "bash", "/home/lynch/wp.sh", NULL };
+static const char *menu2[] =       { "bash", "/home/lynch/menu2.sh", NULL }
 
 static const Key keys[] = {
 	/* Note that Shift changes certain key codes: c -> C, 2 -> at, etc. */
 	/* modifier                  key                 function        argument */
-	{ MODKEY,                    XKB_KEY_p,          spawn,          {.v = menucmd} },
-	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_Return,     spawn,          {.v = termcmd} },
+	{ MODKEY,                    XKB_KEY_w,          spawn,          {.v = menu2} },
+    	{ MODKEY,                    XKB_KEY_e,          spawn,          {.v = filebcmd} },
+    	{ MODKEY,                    XKB_KEY_p,          spawn,          {.v = shotcmd} },
+    	{ 0,     XKB_KEY_XF86AudioMute,                  spawn,          {.v = mute_vol } },
+    	{ 0,     XKB_KEY_XF86AudioLowerVolume,           spawn,          {.v = down_vol } },
+    	{ 0,     XKB_KEY_XF86AudioRaiseVolume,           spawn,          {.v = up_vol } }, 
+    	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_L,          spawn,          {.v = usercmd} },
+    	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_K,          spawn,          {.v = user1cmd} },
+	{ MODKEY,                    XKB_KEY_u,          togglebar,      {0} },
+	{ MODKEY,                    XKB_KEY_b,          spawn,          {.v = browser} },
+	{ MODKEY,                    XKB_KEY_a,          spawn,          {.v = menucmd} },
+	{ MODKEY,                    XKB_KEY_q,          spawn,          {.v = termcmd} },
 	{ MODKEY,                    XKB_KEY_j,          focusstack,     {.i = +1} },
 	{ MODKEY,                    XKB_KEY_k,          focusstack,     {.i = -1} },
 	{ MODKEY,                    XKB_KEY_i,          incnmaster,     {.i = +1} },

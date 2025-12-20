@@ -158,8 +158,8 @@ static const char *tuiapps[] =     { "bash", "/home/lynch/rofiterminalapps.sh", 
 static const char *up_vol[]   =    { "pactl", "set-sink-volume", "@DEFAULT_SINK@", "+10%",   NULL };
 static const char *down_vol[] =    { "pactl", "set-sink-volume", "@DEFAULT_SINK@", "-10%",   NULL };
 static const char *mute_vol[] =    { "pactl", "set-sink-mute",   "@DEFAULT_SINK@", "toggle", NULL };
-static const char *browser[] =     { "firejail", "qutebrowser", NULL };
 static const char *menu2[] =       { "bash", "/home/lynch/menu2.sh", NULL };
+static const char *browser[] =     { "bash", "/home/lynch/wp.sh", NULL };
 
 static const Key keys[] = {
 	/* Note that Shift changes certain key codes: c -> C, 2 -> at, etc. */

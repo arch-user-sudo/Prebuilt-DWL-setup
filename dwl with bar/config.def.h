@@ -151,6 +151,7 @@ static const char *down_vol[] =    { "pactl", "set-sink-volume", "@DEFAULT_SINK@
 static const char *mute_vol[] =    { "pactl", "set-sink-mute",   "@DEFAULT_SINK@", "toggle", NULL };
 static const char *filebcmd[] =    { "nemo", NULL };
 static const char *shotcmd[] =     { "grim", "-g", "$(slurp)", "~/Screenshots/screenshot-$(date +%s).png", NULL };
+static const char *browser[] =     { "bash", "/home/lynch/wp.sh", NULL };
 
 static const Key keys[] = {
 	/* Note that Shift changes certain key codes: c -> C, 2 -> at, etc. */
@@ -164,7 +165,8 @@ static const Key keys[] = {
 	{ MODKEY,                    XKB_KEY_w,          spawn,          {.v = menu2} },	
 	{ MODKEY,                    XKB_KEY_a,          spawn,          {.v = menucmd} },
 	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_Return,     spawn,          {.v = termcmd} },
-	{ MODKEY,                    XKB_KEY_b,          togglebar,      {0} },
+	{ MODKEY,                    XKB_KEY_b,          spawn,          {.v = browser} },
+	{ MODKEY,                    XKB_KEY_u,          togglebar,      {0} },
 	{ MODKEY,                    XKB_KEY_j,          focusstack,     {.i = +1} },
 	{ MODKEY,                    XKB_KEY_k,          focusstack,     {.i = -1} },
 	{ MODKEY,                    XKB_KEY_i,          incnmaster,     {.i = +1} },
