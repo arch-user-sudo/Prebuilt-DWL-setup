@@ -150,7 +150,7 @@ static const char *up_vol[]   =    { "pactl", "set-sink-volume", "@DEFAULT_SINK@
 static const char *down_vol[] =    { "pactl", "set-sink-volume", "@DEFAULT_SINK@", "-10%",   NULL };
 static const char *mute_vol[] =    { "pactl", "set-sink-mute",   "@DEFAULT_SINK@", "toggle", NULL };
 static const char *filebcmd[] =    { "nemo", NULL };
-static const char *shotcmd[] =     { "grim", "-g", "$(slurp)", "~/Screenshots/screenshot-$(date +%s).png", NULL };
+static const char *shotcmd[] =     { "screengrab"", NULL };
 static const char *browser[] =     { "bash", "/home/lynch/wp.sh", NULL };
 
 static const Key keys[] = {

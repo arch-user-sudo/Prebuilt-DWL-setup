@@ -23,14 +23,15 @@ static const float rootcolor[]             = COLOR(0x000000ff);
 static const float fullscreen_bg[]         = {0.0f, 0.0f, 0.0f, 1.0f}; /* You can also use glsl colors */
 static uint32_t colors[][3]                = {
 	/*               fg          bg          border    */
-	[SchemeNorm] = { 0xffffffff, 0x222222B2, 0x333333B3 },
-	[SchemeSel]  = { 0xffffffff, 0x111111B2, 0x666666B3 },
+	[SchemeNorm] = { 0xffffffff, 0x111111ff, 0x333333B3 },
+	[SchemeSel]  = { 0xffffffff, 0x111111ff, 0x666666B3 },
 	[SchemeUrg]  = { 0,          0,          0x770000B3 },
-	[SchemeVar]  = { 0xffffffff, 0x111111B2, 0x333333B3 },
+	[SchemeVar]  = { 0xffffff00, 0x111111ff, 0x333333B3 },
+	[SchemeWork] = { 0x444444B3, 0x111111ff, 0x333333B3 },
 };
 
 /* tagging */
-static char *tags[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
+static char *tags[] = { " ", " ", " ", "4", "5", " ", "7", " ", " " };
 
 /* logging */
 static int log_level = WLR_ERROR;
@@ -57,9 +58,9 @@ static const Rule rules[] = {
 /* layout(s) */
 static const Layout layouts[] = {
 	/* symbol     arrange function */
-	{ " 󱠏     ",      tile },
-	{ " 󱠒     ",      NULL },    /* no layout function means floating behavior */
-	{ " 󱠑     ",      monocle },
+	{ "   ",      tile },
+	{ "   ",      NULL },    /* no layout function means floating behavior */
+	{ "   ",      monocle },
 };
 
 /* monitors */
@@ -152,7 +153,7 @@ static const char *termcmd[] =     { "alacritty", NULL };
 static const char *menucmd[] =     { "bash", "/home/lynch/rofi.sh", NULL };
 static const char *usercmd[] =     { "alacritty", "-e", "sudo", "sysctl", "kernel.unprivileged_userns_clone=1", NULL };
 static const char *user1cmd[] =    { "alacritty", "-e", "sudo", "sysctl", "kernel.unprivileged_userns_clone=0", NULL };
-static const char *shotcmd[] =     { "$HOME/screenshot.sh", NULL }; 
+static const char *shotcmd[] =     { "screengrab", NULL }; 
 static const char *filebcmd[] =    { "nemo", NULL };
 static const char *tuiapps[] =     { "bash", "/home/lynch/rofiterminalapps.sh", NULL };
 static const char *up_vol[]   =    { "pactl", "set-sink-volume", "@DEFAULT_SINK@", "+10%",   NULL };
@@ -166,7 +167,7 @@ static const Key keys[] = {
 	/* modifier                  key                 function        argument */
 	{ MODKEY,                    XKB_KEY_w,          spawn,          {.v = menu2} },
     	{ MODKEY,                    XKB_KEY_e,          spawn,          {.v = filebcmd} },
-    	{ MODKEY,                    XKB_KEY_p,          spawn,          {.v = shotcmd} },
+    	{ MODKEY,                    XKB_KEY_G,          spawn,          {.v = shotcmd} },
     	{ 0,     XKB_KEY_XF86AudioMute,                  spawn,          {.v = mute_vol } },
     	{ 0,     XKB_KEY_XF86AudioLowerVolume,           spawn,          {.v = down_vol } },
     	{ 0,     XKB_KEY_XF86AudioRaiseVolume,           spawn,          {.v = up_vol } }, 

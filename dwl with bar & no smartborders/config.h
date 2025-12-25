@@ -22,14 +22,15 @@ static const float rootcolor[]             = COLOR(0x000000ff);
 static const float fullscreen_bg[]         = {0.0f, 0.0f, 0.0f, 1.0f}; /* You can also use glsl colors */
 static uint32_t colors[][3]                = {
 	/*               fg          bg          border    */
-	[SchemeNorm] = { 0xffffffff, 0x222222B2, 0x333333B3 },
-	[SchemeSel]  = { 0xffffffff, 0x111111B2, 0x666666B3 },
+	[SchemeNorm] = { 0xffffffff, 0x111111B3, 0x333333B3 },
+	[SchemeSel]  = { 0xffffffff, 0x111111B3, 0x666666B3 },
 	[SchemeUrg]  = { 0,          0,          0x770000B3 },
-	[SchemeVan]  = { 0xffffffff, 0x111111B2, 0x333333B3 },
+	[SchemeVan]  = { 0xffffff00, 0x111111B3, 0x333333B3 },
+	[SchemeWork] = { 0x444444B3, 0x111111B3, 0x333333B3 },
 };
 
 /* tagging */
-static char *tags[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
+static char *tags[] = { " ", " ", " ", "4", "5", " ", "7", " ", " " };
 
 /* logging */
 static int log_level = WLR_ERROR;
@@ -58,9 +59,9 @@ static const Rule rules[] = {
 /* layout(s) */
 static const Layout layouts[] = {
 	/* symbol     arrange function */
-	{ " 󱠏   ",      tile },
-	{ " 󱠑   ",      NULL },    /* no layout function means floating behavior */
-	{ " 󱠒   ",      monocle },
+	{ "   ",      tile },
+	{ "   ",      NULL },    /* no layout function means floating behavior */
+	{ "   ",      monocle },
 };
 
 /* monitors */
