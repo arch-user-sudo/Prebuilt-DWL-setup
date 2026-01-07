@@ -1,1 +1,2 @@
-exec grim -g "$(slurp)" ~/Screenshots/screenshot-$(date +%s).png
+#!/usr/bin/bash
+exec grim -g "$(slurp)" "/home/lynch/Screenshots/screenshot-$(date +%s).png"
