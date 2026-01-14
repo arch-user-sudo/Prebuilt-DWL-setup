@@ -37,7 +37,7 @@ static int log_level = WLR_ERROR;
 
 /* Autostart */
 static const char *const autostart[] = {
-        "wbg", "-s", "/home/lynch/13.png", NULL,
+        "wbg", "-s", "/home/lynch/1.png", NULL,
         /*"mako", NULL,*/
 	/*"/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1", NULL,*/                            
         /*"/usr/lib/xdg-desktop-portal-gtk", NULL,*/
