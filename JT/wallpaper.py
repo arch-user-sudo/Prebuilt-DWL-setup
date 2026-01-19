@@ -3,10 +3,11 @@ import os
 import subprocess
 import threading
 import time
+from concurrent.futures import ThreadPoolExecutor
 import gi
 
 gi.require_version("Gtk", "3.0")
-from gi.repository import Gtk, GdkPixbuf, GLib
+from gi.repository import Gtk, GdkPixbuf, GLib, Gdk
 
 class WallpaperPicker(Gtk.Window):
     def __init__(self):
@@ -31,6 +32,25 @@ class WallpaperPicker(Gtk.Window):
         self.loading_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=15)
         self.loading_box.set_valign(Gtk.Align.CENTER)
         self.loading_box.set_halign(Gtk.Align.CENTER)
+        
+        # Add solid background
+        self.loading_box.get_style_context().add_class("loading-overlay")
+        
+        # Create CSS provider for solid background
+        css_provider = Gtk.CssProvider()
+        css = """
+        .loading-overlay {
+            background-color: #2e3440;
+            border-radius: 8px;
+            padding: 20px;
+        }
+        """
+        css_provider.load_from_data(css.encode())
+        Gtk.StyleContext.add_provider_for_screen(
+            Gdk.Screen.get_default(),
+            css_provider,
+            Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
+        )
         
         self.progress = Gtk.ProgressBar()
         self.progress.set_size_request(300, 20)
@@ -58,32 +78,46 @@ class WallpaperPicker(Gtk.Window):
         return False 
 
     def load_wallpapers_async(self):
-        """Scans CWD and loads thumbnails efficiently"""
-        cwd = os.getcwd()
+        """Scans ~/Wallpapers and loads thumbnails efficiently"""
+        wallpaper_dir = os.path.expanduser("~/Wallpapers")
         valid_exts = (".png", ".jpg", ".jpeg", ".webp")
         
         try:
-            files = [f for f in os.listdir(cwd) if f.lower().endswith(valid_exts)]
+            files = [f for f in os.listdir(wallpaper_dir) if f.lower().endswith(valid_exts)]
         except Exception as e:
             print(f"Error reading directory: {e}")
             files = []
         
-        for filename in files:
-            filepath = os.path.join(cwd, filename)
-            try:
-                # Small sleep to keep the UI thread responsive for the animation
-                time.sleep(0.01) 
-                
-                # OPTIMIZED: Loads directly to size for speed and low RAM usage
-                pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_size(filepath, 180, 110)
-                
-                # Push the UI update to the main thread
-                GLib.idle_add(self.add_wallpaper_to_ui, filepath, filename, pixbuf)
-            except Exception as e:
-                print(f"Skipping {filename}: {e}")
+        # Load thumbnails in parallel using ThreadPoolExecutor
+        with ThreadPoolExecutor(max_workers=4) as executor:
+            futures = []
+            for filename in files:
+                filepath = os.path.join(wallpaper_dir, filename)
+                future = executor.submit(self.load_thumbnail, filepath, filename)
+                futures.append(future)
+            
+            # Process results as they complete
+            for future in futures:
+                try:
+                    result = future.result()
+                    if result:
+                        filepath, filename, pixbuf = result
+                        GLib.idle_add(self.add_wallpaper_to_ui, filepath, filename, pixbuf)
+                except Exception as e:
+                    print(f"Error loading thumbnail: {e}")
 
         # Hide loading overlay when done
         GLib.idle_add(self.stop_loading)
+
+    def load_thumbnail(self, filepath, filename):
+        """Load a single thumbnail efficiently"""
+        try:
+            # Load directly to thumbnail size for speed and low RAM usage
+            pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_size(filepath, 180, 110)
+            return filepath, filename, pixbuf
+        except Exception as e:
+            print(f"Skipping {filename}: {e}")
+            return None
 
     def add_wallpaper_to_ui(self, filepath, filename, pixbuf):
         """Creates the visual button for each image"""
