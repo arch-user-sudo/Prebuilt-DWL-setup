@@ -29,7 +29,7 @@ apps=$(
 )
 
 choice=$(printf '%s\n' "$apps" | sort -u | fzf --prompt="apps> ")
-[ -z "$choice" ] && exit 0
+[ -z "$choice" ] &
 
 id=$(printf '%s' "$choice" | sed 's/.* | //')
 
