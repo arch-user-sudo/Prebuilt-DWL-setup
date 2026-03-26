@@ -1,2 +1,0 @@
-[2026-03-15T23:31:44Z ERROR rwaybar::item] Error parsing temp1: No matches found for glob '/sys/block/nvme0n1/device/hwmon*/temp1_input'
-/bin/sh: line 1: /home/daniel/bin/weather-widget: No such file or directory
