@@ -1,12 +1,11 @@
 # Compile flags for speed + reliability
-CFLAGS = -O2 -march=native -mtune=native -pipe -fno-plt -fomit-frame-pointer -flto
-LDFLAGS = -Wl,-O1,--as-needed -flto
+CFLAGS = -O2 -march=native -mtune=native -pipe \
+         -fno-plt -fomit-frame-pointer \
+         -fstack-protector-strong -D_FORTIFY_SOURCE=2 \
+         -ffunction-sections -fdata-sections
 
-# Optional extra speed
-CFLAGS += -funroll-loops
+LDFLAGS = -Wl,-O1,--as-needed,--gc-sections
 
-_VERSION = 0.8-dev
-VERSION  = `git describe --tags --dirty 2>/dev/null || echo $(_VERSION)`
 
 _VERSION = 0.8-dev
 VERSION  = `git describe --tags --dirty 2>/dev/null || echo $(_VERSION)`
@@ -37,11 +36,10 @@ WLR_LIBS = `$(PKG_CONFIG) --libs wlroots-0.19`
 XWAYLAND =
 XLIBS =
 # Uncomment to build XWayland support
-#XWAYLAND = -DXWAYLAND
-#XLIBS = xcb xcb-icccm
+XWAYLAND = -DXWAYLAND
+XLIBS = xcb xcb-icccm
 
 # dwl itself only uses C99 features, but wlroots' headers use anonymous unions (C11).
 # To avoid warnings about them, we do not use -std=c99 and instead of using the
 # gmake default 'CC=c99', we use cc.
 CC = cc
-ENABLE_VSYNC = 0

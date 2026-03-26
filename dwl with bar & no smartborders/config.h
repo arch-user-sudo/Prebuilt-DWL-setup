@@ -37,7 +37,8 @@ static int log_level = WLR_ERROR;
 
 /* Autostart */
 static const char *const autostart[] = {
-        "wbg", "-s", "/home/lynch/1.png", NULL,
+        "wbg", "-s", "/home/lynch/Wallpapers/ford-gt.jpeg", NULL,
+        "foot", "--server", NULL, 
         /*"mako", NULL,*/
 	/*"/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1", NULL,*/                            
         /*"/usr/lib/xdg-desktop-portal-gtk", NULL,*/
@@ -76,7 +77,7 @@ static const MonitorRule monrules[] = {
 	/*{ "eDP-1",    0.5f,  1,      2,    &layouts[0], WL_OUTPUT_TRANSFORM_NORMAL,   -1,  -1 },*/
 
 	/* defaults */
-	{ "DP-1",       0.5f, 1,      1,    &layouts[0], WL_OUTPUT_TRANSFORM_NORMAL,   -1,  -1 },
+	{ "DP-3",       0.5f, 1,      1,    &layouts[0], WL_OUTPUT_TRANSFORM_NORMAL,   -1,  -1 },
 
 };
 
@@ -150,7 +151,7 @@ static const enum libinput_config_tap_button_map button_map = LIBINPUT_CONFIG_TA
 #define SHCMD(cmd) { .v = (const char*[]){ "/bin/sh", "-c", cmd, NULL } }
 
 /* commands */
-static const char *termcmd[] =     { "alacritty", NULL };
+static const char *termcmd[] =     { "footclient", NULL };
 static const char *menucmd[] =     { "bash", "/home/lynch/rofi.sh", NULL };
 static const char *usercmd[] =     { "alacritty", "-e", "sudo", "sysctl", "kernel.unprivileged_userns_clone=1", NULL };
 static const char *user1cmd[] =    { "alacritty", "-e", "sudo", "sysctl", "kernel.unprivileged_userns_clone=0", NULL };
