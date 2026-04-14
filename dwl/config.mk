@@ -1,11 +1,9 @@
-# Compile flags for speed + reliability
 CFLAGS = -O2 -march=native -mtune=native -pipe \
          -fno-plt -fomit-frame-pointer \
          -fstack-protector-strong -D_FORTIFY_SOURCE=2 \
          -ffunction-sections -fdata-sections
 
 LDFLAGS = -Wl,-O1,--as-needed,--gc-sections
-
 
 _VERSION = 0.8-dev
 VERSION  = `git describe --tags --dirty 2>/dev/null || echo $(_VERSION)`
