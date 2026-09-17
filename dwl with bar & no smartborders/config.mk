@@ -10,8 +10,8 @@ PREFIX = /usr/local
 MANDIR = $(PREFIX)/share/man
 DATADIR = $(PREFIX)/share
 
-WLR_INCS = `$(PKG_CONFIG) --cflags wlroots-0.20`
-WLR_LIBS = `$(PKG_CONFIG) --libs wlroots-0.20`
+WLR_INCS = `$(PKG_CONFIG) --cflags wlroots-0.21`
+WLR_LIBS = `$(PKG_CONFIG) --libs wlroots-0.21`
 
 # Allow using an alternative wlroots installation
 # This has to have all the includes required by wlroots, e.g:
@@ -19,12 +19,12 @@ WLR_LIBS = `$(PKG_CONFIG) --libs wlroots-0.20`
 #WLR_INCS = -I/usr/include/pixman-1 -I/usr/include/elogind -I/usr/include/libdrm \
 #	-I$(PWD)/wlroots/include
 # Set -rpath to avoid using the wrong library.
-#WLR_LIBS = -Wl,-rpath,$(PWD)/wlroots/build -L$(PWD)/wlroots/build -lwlroots-0.20
+#WLR_LIBS = -Wl,-rpath,$(PWD)/wlroots/build -L$(PWD)/wlroots/build -lwlroots-0.21
 
-# Assuming you ran "meson setup --prefix ${PWD}/0.20 build && ninja -C build install"
+# Assuming you ran "meson setup --prefix ${PWD}/0.21 build && ninja -C build install"
 #WLR_INCS = -I/usr/include/pixman-1 -I/usr/include/elogind -I/usr/include/libdrm \
-#	-I$(PWD)/wlroots/0.20/include/wlroots-0.20
-#WLR_LIBS = -Wl,-rpath,$(PWD)/wlroots/0.20/lib64 -L$(PWD)/wlroots/0.20/lib64 -lwlroots-0.20
+#	-I$(PWD)/wlroots/0.21/include/wlroots-0.21
+#WLR_LIBS = -Wl,-rpath,$(PWD)/wlroots/0.21/lib64 -L$(PWD)/wlroots/0.21/lib64 -lwlroots-0.21
 
 #XWAYLAND =
 #XLIBS =

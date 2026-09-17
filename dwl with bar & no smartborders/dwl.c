@@ -188,6 +188,12 @@ typedef struct {
 } LayerSurface;
 
 typedef struct {
+	struct wlr_xdg_popup *xdg_popup;
+	struct wl_listener commit;
+	struct wl_listener destroy;
+} Popup;
+
+typedef struct {
 	const char *symbol;
 	void (*arrange)(Monitor *);
 } Layout;
@@ -318,6 +324,7 @@ static void destroylock(SessionLock *lock, int unlocked);
 static void destroylocksurface(struct wl_listener *listener, void *data);
 static void destroynotify(struct wl_listener *listener, void *data);
 static void destroypointerconstraint(struct wl_listener *listener, void *data);
+static void destroypopup(struct wl_listener *listener, void *data);
 static void destroysessionlock(struct wl_listener *listener, void *data);
 static void destroykeyboardgroup(struct wl_listener *listener, void *data);
 static Monitor *dirtomon(enum wlr_direction dir);
@@ -1116,15 +1123,28 @@ commitnotify(struct wl_listener *listener, void *data)
 		c->resize = 0;
 }
 
+static void
+destroypopup(struct wl_listener *listener, void *data)
+{
+	Popup *popup;
+	popup = wl_container_of(listener, popup, destroy);
+	wl_list_remove(&popup->commit.link);
+	wl_list_remove(&popup->destroy.link);
+	free(popup);
+}
+
 void
 commitpopup(struct wl_listener *listener, void *data)
 {
-	struct wlr_surface *surface = data;
-	struct wlr_xdg_popup *popup = wlr_xdg_popup_try_from_wlr_surface(surface);
+	Popup *p;
+	struct wlr_xdg_popup *popup;
 	LayerSurface *l = NULL;
 	Client *c = NULL;
 	struct wlr_box box;
 	int type = -1;
+
+	p = wl_container_of(listener, p, commit);
+	popup = p->xdg_popup;
 
 	if (!popup->base->initial_commit)
 		return;
@@ -1142,8 +1162,6 @@ commitpopup(struct wl_listener *listener, void *data)
 	box.x -= (type == LayerShell ? l->scene->node.x : c->geom.x);
 	box.y -= (type == LayerShell ? l->scene->node.y : c->geom.y);
 	wlr_xdg_popup_unconstrain_from_box(popup, &box);
-	wl_list_remove(&listener->link);
-	free(listener);
 }
 
 void
@@ -1438,8 +1456,16 @@ createpopup(struct wl_listener *listener, void *data)
 {
 	/* This event is raised when a client (either xdg-shell or layer-shell)
 	 * creates a new popup. */
-	struct wlr_xdg_popup *popup = data;
-	LISTEN_STATIC(&popup->base->surface->events.commit, commitpopup);
+	struct wlr_xdg_popup *xdg_popup;
+	Popup *popup;
+
+	xdg_popup = data;
+	popup = ecalloc(1, sizeof(*popup));
+	popup->xdg_popup = xdg_popup;
+	popup->commit.notify = commitpopup;
+	wl_signal_add(&xdg_popup->base->surface->events.commit, &popup->commit);
+	popup->destroy.notify = destroypopup;
+	wl_signal_add(&xdg_popup->events.destroy, &popup->destroy);
 }
 
 void
@@ -3083,7 +3109,7 @@ setup(void)
 	wlr_server_decoration_manager_set_default_mode(
 			wlr_server_decoration_manager_create(dpy),
 			WLR_SERVER_DECORATION_MANAGER_MODE_SERVER);
-	xdg_decoration_mgr = wlr_xdg_decoration_manager_v1_create(dpy);
+	xdg_decoration_mgr = wlr_xdg_decoration_manager_v1_create(dpy, 2);
 	wl_signal_add(&xdg_decoration_mgr->events.new_toplevel_decoration, &new_xdg_decoration);
 
 	pointer_constraints = wlr_pointer_constraints_v1_create(dpy);
